@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
+  const currentRoute = location.pathname.split("/").slice(0, 2).join("/");
   const routes = [
     {
       path: "/warehouse",
@@ -26,14 +27,14 @@ const Navbar = () => {
   return (
     <div className="mt-[4vh] flex justify-between w-[75vw] items-center">
       <div className="">
-        {location.pathname === "/" ? (
+        {currentRoute === "/" ? (
           <>
             <p className="text-[18px] text-brown font-[500]">Welcome to your</p>
             <h2 className="text-[24px] font-[600] m-0">Dashboard</h2>
           </>
         ) : (
           routes.map((route, index) => {
-            return location.pathname === route.path ? (
+            return currentRoute === route.path ? (
               <h2 className="text-[24px] font-[600] m-0" key={index}>
                 {route.text}
               </h2>

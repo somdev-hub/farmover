@@ -6,6 +6,9 @@ import Navbar from "./components/Navbar";
 import { Outlet, Routes, Route, BrowserRouter } from "react-router-dom";
 import Warehouse from "./pages/farmers/Warehouse";
 import Services from "./pages/farmers/Services";
+import Learning from "./pages/farmers/Learning";
+import Calendar from "./pages/farmers/Calendar";
+import WarehouseView from "./pages/farmers/WarehouseView";
 
 function Layout() {
   return (
@@ -29,6 +32,9 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="/warehouse" element={<Warehouse />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/learning" element={<Learning />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/warehouse/view" element={<WarehouseView />} />
         </Route>
       </Routes>
     </BrowserRouter>

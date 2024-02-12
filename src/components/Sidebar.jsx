@@ -9,7 +9,8 @@ import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
   const location = useLocation();
-  const currentRoute = location.pathname;
+  const currentRoute = location.pathname.split('/').slice(0, 2).join('/');
+  console.log(currentRoute);
   const routes = [
     {
       name: "Dashboard",
