@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import green_tick from "../../assets/green-tick.svg";
 import PropTypes from "prop-types";
 import MainInput from "../../components/MainInput";
+import Checkbox from "@mui/material/Checkbox";
+import { CgPushRight } from "react-icons/cg";
 
 const Overview = ({ warehouseDetails, facilities, areas }) => {
   return (
@@ -59,54 +61,133 @@ const Overview = ({ warehouseDetails, facilities, areas }) => {
 };
 
 const Store = () => {
+  const [checked, setChecked] = useState(false);
+  const [storageData, setStorageData] = useState({
+    name: "",
+    adhaar: "",
+    address: "",
+    storageType: "",
+    items: "",
+    weight: "",
+    arrivalDate: new Date(),
+    duration: "",
+    kisanCard: "",
+    markForSale: ""
+  });
+  const handleChange = (e) => {
+    setStorageData({ ...storageData, [e.target.name]: e.target.value });
+  };
+  const handleFileChange = (e) => {
+    setStorageData({ ...storageData, kisanCard: e.target.files[0] });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!checked)
+      return alert(
+        "Please read the terms and conditions and policy of warehouse before continuing"
+      );
+    console.log(storageData);
+  };
   return (
     <div className="mt-10 flex gap-6">
       <div className="flex-1 flex flex-col gap-4">
-        <MainInput heading="enter your name" placeholder="John Doe" />
+        <MainInput
+          heading="enter your name"
+          placeholder="John Doe"
+          onChange={handleChange}
+          name="name"
+          value={storageData.name}
+        />
         <MainInput
           heading="enter your adhaar number"
           placeholder="XXXX XXXX XXXX"
+          onChange={handleChange}
+          name="adhaar"
+          value={storageData.adhaar}
         />
         <MainInput
           heading="Enter your  address"
           placeholder="At/po- Sambalpur, Odisha"
+          onChange={handleChange}
+          name="address"
+          value={storageData.address}
         />
         <MainInput
           heading="Select storage type"
           placeholder="Select"
           type="select"
+          onChange={handleChange}
           options={["Cold storage", "Dry storage", "Open storage"]}
+          name="storageType"
+          value={storageData.storageType}
         />
       </div>
       <div className="flex-1 flex flex-col gap-4">
         <MainInput
           heading="Enter items to be stored"
           placeholder="Rice, wheat, maize, etc"
+          onChange={handleChange}
+          name="items"
+          value={storageData.items}
         />
         <MainInput
           heading="Total weights of all items in kgs"
           placeholder="100"
+          onChange={handleChange}
+          name="weight"
+          value={storageData.weight}
         />
         <MainInput
           heading="Expected shipment arrival date"
           placeholder="select"
+          inputType="date"
+          onChange={handleChange}
+          name="arrivalDate"
+          value={storageData.arrivalDate}
         />
         <MainInput
           heading="Enter duration of storage(in months)"
           placeholder="6"
+          onChange={handleChange}
+          name="duration"
+          value={storageData.duration}
         />
       </div>
       <div className="flex-1 flex flex-col gap-4">
         <MainInput
           heading="Upload govt. issued kisan card(if any)"
           placeholder="6"
+          onChange={handleFileChange}
+          type="file"
+          name="kisanCard"
+          value={storageData.kisanCard}
         />
         <MainInput
           heading="Mark for sale"
           placeholder="Select"
           type="select"
+          onChange={handleChange}
           options={["Yes", "No"]}
+          name="markForSale"
+          value={storageData.markForSale}
         />
+        <div className="flex gap-1 mt-4">
+          <Checkbox
+            checked={checked}
+            onChange={(e) => setChecked(e.target.checked)}
+          />
+          <p className="text-[14px]">
+            Read all the terms and conditions and policy of warehouse before
+            continuing
+          </p>
+        </div>
+        <button
+          className="mt-4 rounded-[1rem] bg-darkNavy w-full py-3 text-white flex gap-2 items-center justify-center"
+          onClick={handleSubmit}
+        >
+          Continue
+          <CgPushRight className="text-[20px]" />
+        </button>
       </div>
     </div>
   );
@@ -114,6 +195,7 @@ const Store = () => {
 
 const WarehouseView = () => {
   const [currentTab, setCurrentTab] = React.useState("overview");
+
   const facilities = [
     "1000 matric tons of storage",
     "Cold storage facility",
@@ -156,13 +238,13 @@ const WarehouseView = () => {
   ];
   return (
     <div className="mt-10 flex flex-col ">
-      <div className=" w-full h-max flex  flex-col relative">
+      <div className=" w-[75vw] h-max flex  flex-col relative">
         <img
           src="https://media.istockphoto.com/id/1009023546/photo/warehouse.webp?b=1&s=170667a&w=0&k=20&c=ZZDKiitFLHbvKP_LcdRAXsobDpfzgaRk-f3uaqwADUs="
           alt=""
-          className="w-[97%] h-[18rem] rounded-[1rem] absolute"
+          className="w-full h-[18rem] rounded-[1rem] absolute"
         />
-        <div className="w-[97%] flex justify-center">
+        <div className="w-full flex justify-center">
           <div className="px-10 py-6 rounded-[1rem] bg-white shadow-md z-10 w-[95%] mt-[13rem]">
             <div className="flex justify-between items-center">
               <div className="flex gap-4">

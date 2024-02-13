@@ -9,6 +9,9 @@ import Services from "./pages/farmers/Services";
 import Learning from "./pages/farmers/Learning";
 import Calendar from "./pages/farmers/Calendar";
 import WarehouseView from "./pages/farmers/WarehouseView";
+import Signup from "./pages/welcome/Signup";
+import SetPassword from "./pages/welcome/SetPassword";
+import Login from "./pages/welcome/Login";
 
 function Layout() {
   return (
@@ -36,6 +39,9 @@ function App() {
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/warehouse/view" element={<WarehouseView />} />
         </Route>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/set-password" element={<SetPassword />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
