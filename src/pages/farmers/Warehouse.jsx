@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import green_tick from "../../assets/green-tick.svg";
 import { FaSort } from "react-icons/fa";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import WarehouseCard from "../../components/WarehouseCard";
+import { getWarehouses } from "../../apis/api";
 
 const Warehouse = () => {
+  const [warehouses, setWarehouses] = useState([]);
+
+  useEffect(() => {
+    const fetchWarehouses = async () => {
+      const response = await getWarehouses();
+
+      console.log(response);
+      setWarehouses(response);
+    };
+    fetchWarehouses();
+  }, []);
   return (
     <div className="mt-8">
       <div className="">
@@ -22,11 +34,16 @@ const Warehouse = () => {
           </div>
         </div>
         <div className="flex gap-6 mt-6 ">
-          {Array(3)
-            .fill()
-            .map((_, i) => (
-              <WarehouseCard key={i} />
-            ))}
+          {warehouses?.map((item, i) => (
+            <WarehouseCard
+              key={i}
+              id={item.id}
+              image={item.warehouseImage}
+              name={item.name}
+              address={item.address}
+              storages={item.storages}
+            />
+          ))}
         </div>
       </div>
       <div className="mt-8">

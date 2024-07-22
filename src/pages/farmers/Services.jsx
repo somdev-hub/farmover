@@ -2,8 +2,19 @@ import { FaSort } from "react-icons/fa";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import green_tick from "../../assets/green-tick.svg";
 import ServicesCard from "../../components/ServicesCard";
+import { useEffect, useState } from "react";
+import { getAvailableServices } from "../../apis/api";
 
 const Services = () => {
+  const [availableServices, setAvailableServices] = useState([]);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      const response = await getAvailableServices();
+      setAvailableServices(response);
+    };
+    fetchServices();
+  }, []);
   return (
     <div className="mt-8">
       <div className="">
@@ -21,11 +32,9 @@ const Services = () => {
           </div>
         </div>
         <div className="flex gap-4 mt-6">
-          {Array(3)
-            .fill()
-            .map((_, i) => (
-              <ServicesCard key={i} />
-            ))}
+          {availableServices?.map((service, i) => (
+            <ServicesCard key={i} service={service} />
+          ))}
         </div>
       </div>
     </div>

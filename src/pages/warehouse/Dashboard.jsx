@@ -1,5 +1,5 @@
-import { FaPlus } from "react-icons/fa";
-import { FaKey } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaPlus } from "react-icons/fa6";
 import ChartCard from "../../components/ChartCard";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,19 +8,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import {
-  getEachProductionData,
-  getExpenseChartData,
-  getProductionChartData,
-  getRevenueChartData
-} from "../../apis/api";
+import { getStorageCards } from "../../apis/api";
+import { storage_areas } from "../../assets/storages";
 
 const Dashboard = () => {
-  const [productionCard, setProductioCard] = useState([]);
-  const [expenses, setExpenses] = useState({});
-  const [revenue, setRevenue] = useState({});
-  const [productionData, setProductionData] = useState([]);
+  const [storageCards, setStorageCards] = useState([]);
 
   const totalProductionOptions = {
     chart: {
@@ -38,7 +30,13 @@ const Dashboard = () => {
     },
 
     xAxis: {
-      categories: [productionData && Object.keys(productionData)],
+      categories: [
+        "Product 1",
+        "Product 2",
+        "Product 3",
+        "Product 4",
+        "Product 5"
+      ],
       labels: {
         enabled: false
       }
@@ -52,11 +50,10 @@ const Dashboard = () => {
     series: [
       {
         name: "Production",
-        data: [Object.values(productionData)] // replace this with your actual data
+        data: [100, 200, 150, 300, 250] // replace this with your actual data
       }
     ]
   };
-
   const totalRevenueOptions = {
     chart: {
       type: "line",
@@ -77,7 +74,20 @@ const Dashboard = () => {
       }
     },
     xAxis: {
-      categories: [revenue && Object.keys(revenue)],
+      categories: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
       labels: {
         enabled: false
       }
@@ -85,187 +95,97 @@ const Dashboard = () => {
     series: [
       {
         name: "Revenue",
-        data: [Object.values(revenue)] // replace this with your actual data
+        data: [
+          577, 1388, 1500, 3000, 2500, 1000, 2000, 1500, 3000, 2500, 1000, 2000
+        ] // replace this with your actual data
       }
     ]
   };
-
-  const totalExpenseOptions = {
-    chart: {
-      type: "line",
-      backgroundColor: "transparent",
-      borderRadius: 10,
-      height: 230,
-      width: 350
-    },
-    title: {
-      text: ""
-    },
-    legend: {
-      enabled: false
-    },
-    yAxis: {
-      title: {
-        text: "Expenditure (in Rs)"
-      }
-    },
-    xAxis: {
-      categories: [expenses && Object.keys(expenses)],
-      labels: {
-        enabled: false
-      }
-    },
-    series: [
-      {
-        name: "Expenditure",
-        data: [Object.values(expenses)] // replace this with your actual data
-      }
-    ]
-  };
-
-  const orders = [
+  const storage_usage = [
     {
-      company: "Company 1",
-      purchase: "Rice",
-      warehouse: "Warehouse 1",
-      revenue: "1000"
+      name: "John Doe",
+      storage_used: "Cold storage",
+      quantity: "200",
+      duration: "1 month"
     },
     {
-      company: "Company 2",
-      purchase: "Rice",
-      warehouse: "Warehouse 1",
-      revenue: "1000"
+      name: "John Doe",
+      storage_used: "Cold storage",
+      quantity: "200",
+      duration: "1 month"
     },
     {
-      company: "Company 3",
-      purchase: "Rice",
-      warehouse: "Warehouse 1",
-      revenue: "1000"
+      name: "John Doe",
+      storage_used: "Cold storage",
+      quantity: "200",
+      duration: "1 month"
     },
     {
-      company: "Company 4",
-      purchase: "Rice",
-      warehouse: "Warehouse 1",
-      revenue: "1000"
-    },
-    {
-      company: "Company 5",
-      purchase: "Rice",
-      warehouse: "Warehouse 1",
-      revenue: "1000"
+      name: "John Doe",
+      storage_used: "Cold storage",
+      quantity: "200",
+      duration: "1 month"
     }
   ];
+
   useEffect(() => {
-    const fetchProductionCard = async () => {
-      const response = await getEachProductionData();
-      console.log(response);
-      setProductioCard(response);
+    const fetchStorageCards = async () => {
+      const response = await getStorageCards();
+      setStorageCards(response);
     };
-    const fetchExpensesAndRevenue = async () => {
-      const responseExpense = await getExpenseChartData();
-      const responseRevenue = await getRevenueChartData();
-      const responseProduction = await getProductionChartData();
-      setExpenses(responseExpense);
-      setRevenue(responseRevenue);
-      setProductionData(responseProduction);
-    };
-    fetchProductionCard();
-    fetchExpensesAndRevenue();
+
+    fetchStorageCards();
   }, []);
   return (
     <div className="mt-8">
-      <div className="">
-        <div className="overflow-x-scroll flex gap-4 py-4">
-          <div className="w-fit min-w-[16rem]">
-            <Link to="/farmer/add-production">
-              <div className="px-8 py-4 rounded-[1rem] bg-white shadow-md  flex gap-4">
-                <div className="bg-darkNavy rounded-full p-4 box-border">
-                  <FaPlus className="text-white text-[1.2rem] box-border" />
-                </div>
-                <p className="font-[500] text-[1.125rem]">
-                  Add <br /> production
-                </p>
-              </div>
-            </Link>
-            <Link to="/farmer/production-history">
-              <div className="px-8 py-4 rounded-[1rem] bg-white shadow-md  flex gap-4 mt-4">
-                <div className="bg-darkNavy rounded-full p-4 box-border">
-                  <FaKey className="text-white text-[1.2rem] box-border" />
-                </div>
-                <p className="font-[500] text-[1.125rem]">
-                  Token based <br /> tracking
-                </p>
-              </div>
-            </Link>
+      <div className="flex gap-4">
+        <Link to="/warehouse/add-storage" className="flex ">
+          <div className="w-[17rem] px-6 py-4 rounded-[1rem] bg-white shadow-md flex flex-col items-center justify-evenly">
+            <div className="bg-darkNavy rounded-full p-4 box-border">
+              <FaPlus className="text-white text-[1.2rem] box-border" />
+            </div>
+            <p className="text-[1.125rem] font-[600] ">Add storage</p>
           </div>
-          {productionCard?.map((key, index) => (
-            <div
-              className="px-6 w-[17rem] py-4 rounded-[1rem] bg-white shadow-md flex flex-col min-w-[18rem]"
-              key={index}
-            >
-              <div className="flex justify-between ">
+        </Link>
+        {storageCards?.map((area, index) => (
+          <div
+            className="w-[17rem] px-6 py-4 rounded-[1rem] bg-white shadow-md flex flex-col items-start justify-center"
+            key={index}
+          >
+            <div className="flex justify-between border-b-2 border-grey border-solid pb-6 w-full">
+              <div className="w-16 h-16 rounded-[1rem] bg-white shadow-md p-2">
                 <img
-                  src="https://media.istockphoto.com/id/522691403/photo/close-up-peddy-rice-in-a-field.jpg?s=612x612&w=0&k=20&c=OV5Srt6zPWG8J6QpfQk6pTV242GGlVY5l-VoGdU9uyc="
+                  src={
+                    storage_areas.find(
+                      (item) => item.value === area.storageType
+                    ).img
+                  }
                   alt=""
-                  className="w-[4rem] h-[4rem] rounded-[1rem] object-cover inline-block shadow-md"
+                  className="object-cover w-full h-[full] rounded-[1rem]"
                 />
-                <div className="">
-                  <p className="font-bold text-[1.7rem]">
-                    {key?.productionQuantity}
-                  </p>
-                  <p className="font-[500] text-[20px]">Quintals</p>
-                </div>
               </div>
-              <div className="border-t-2 border-grey mt-8 pt-4 border-solid">
-                <p className="text-[18px] text-grey">
-                  {key?.cropName} production
+              <div className="flex flex-col items-end">
+                <p className="text-[24px] font-[600] ">
+                  {area.availableCapacity}/{area.capacity}
                 </p>
+                <p className="text-[20px] font-[500]">TONS</p>
               </div>
             </div>
-          ))}
-          {/* <div className="px-6 w-[17rem] py-4 rounded-[1rem] bg-white shadow-md flex flex-col ">
-          <div className="flex justify-between ">
-            <img
-              src="https://media.istockphoto.com/id/522691403/photo/close-up-peddy-rice-in-a-field.jpg?s=612x612&w=0&k=20&c=OV5Srt6zPWG8J6QpfQk6pTV242GGlVY5l-VoGdU9uyc="
-              alt=""
-              className="w-[4rem] h-[4rem] rounded-[1rem] object-cover inline-block shadow-md"
-            />
-            <div className="">
-              <p className="font-bold text-[1.7rem]">100</p>
-              <p className="font-[500] text-[20px]">Quintals</p>
-            </div>
+            <p className="text-[1.125rem] text-brown font-[500] mt-3 text-left">
+              {
+                storage_areas.find((item) => item.value === area.storageType)
+                  .name
+              }
+            </p>
           </div>
-          <div className="border-t-2 border-grey mt-8 pt-4 border-solid">
-            <p className="text-[18px] text-grey">Total paddy production</p>
-          </div>
-        </div>
-        <div className="px-6 w-[17rem] py-4 rounded-[1rem] bg-white shadow-md flex flex-col ">
-          <div className="flex justify-between ">
-            <img
-              src="https://media.istockphoto.com/id/522691403/photo/close-up-peddy-rice-in-a-field.jpg?s=612x612&w=0&k=20&c=OV5Srt6zPWG8J6QpfQk6pTV242GGlVY5l-VoGdU9uyc="
-              alt=""
-              className="w-[4rem] h-[4rem] rounded-[1rem] object-cover inline-block shadow-md"
-            />
-            <div className="">
-              <p className="font-bold text-[1.7rem]">100</p>
-              <p className="font-[500] text-[20px]">Quintals</p>
-            </div>
-          </div>
-          <div className="border-t-2 border-grey mt-8 pt-4 border-solid">
-            <p className="text-[18px] text-grey">Total paddy production</p>
-          </div>
-        </div> */}
-        </div>
+        ))}
       </div>
       <div className="flex gap-4 mt-[10rem]">
         <ChartCard
           options={totalProductionOptions}
-          title="Total production"
+          title="Warehouse usage"
           subtitle="data since last month"
-          desc={`${Object.values(productionData)?.reduce(
-            (a, b) => a + b,
-            0
-          )} kilograms of total productions`}
+          desc="120,000 kilograms of new goods added"
         />
         <ChartCard
           options={totalRevenueOptions}
@@ -274,7 +194,7 @@ const Dashboard = () => {
           desc="5% increase in total revenue"
         />
         <ChartCard
-          options={totalExpenseOptions}
+          options={totalProductionOptions}
           title="Total expenditure"
           subtitle="data since last year"
           desc="10% decrease in total expenditure"
@@ -284,9 +204,9 @@ const Dashboard = () => {
         <div className="px-6  py-4 rounded-[1rem] bg-white shadow-md">
           <div className="">
             <div className="">
-              <h3 className="text-[24px] font-[600]">Total sales</h3>
+              <h3 className="text-[24px] font-[600]">Total storage usage</h3>
               <p className="text-brown text-[18px] font-[500]">
-                total 30 companies purchases this month
+                total 30 new vendors added this month
               </p>
             </div>
           </div>
@@ -312,7 +232,7 @@ const Dashboard = () => {
                       paddingRight: "3rem"
                     }}
                   >
-                    Company
+                    Name
                   </TableCell>
                   <TableCell
                     align="left"
@@ -322,7 +242,7 @@ const Dashboard = () => {
                       paddingRight: "3rem"
                     }}
                   >
-                    Purchase
+                    Storage used
                   </TableCell>
                   <TableCell
                     align="left"
@@ -332,7 +252,7 @@ const Dashboard = () => {
                       paddingRight: "3rem"
                     }}
                   >
-                    Warehouse
+                    Quantity
                   </TableCell>
                   <TableCell
                     align="left"
@@ -342,12 +262,12 @@ const Dashboard = () => {
                       paddingRight: "3rem"
                     }}
                   >
-                    Revenue
+                    Duration
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orders.map((order, index) => (
+                {storage_usage.map((item, index) => (
                   <TableRow key={index}>
                     <TableCell
                       sx={{
@@ -361,28 +281,28 @@ const Dashboard = () => {
                         fontSize: "16px"
                       }}
                     >
-                      {order.company}
+                      {item.name}
                     </TableCell>
                     <TableCell
                       sx={{
                         fontSize: "16px"
                       }}
                     >
-                      {order.purchase}
+                      {item.storage_used}
                     </TableCell>
                     <TableCell
                       sx={{
                         fontSize: "16px"
                       }}
                     >
-                      {order.warehouse}
+                      {item.quantity}
                     </TableCell>
                     <TableCell
                       sx={{
                         fontSize: "16px"
                       }}
                     >
-                      Rs.{order.revenue}/-
+                      {item.duration}
                     </TableCell>
                   </TableRow>
                 ))}

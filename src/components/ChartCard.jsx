@@ -1,6 +1,6 @@
-import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import PropTypes from "prop-types";
 
 const ChartCard = ({ options, title, subtitle, desc }) => {
   return (
@@ -19,6 +19,13 @@ const ChartCard = ({ options, title, subtitle, desc }) => {
       </div>
     </div>
   );
+};
+
+ChartCard.propTypes = {
+  options: PropTypes.object,
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  desc: PropTypes.string,
 };
 
 export default ChartCard;

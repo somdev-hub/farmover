@@ -1,10 +1,53 @@
-import React from "react";
+import { useState } from "react";
 import MainInput from "../../components/MainInput";
 import { CgPushRight } from "react-icons/cg";
 import { Link } from "react-router-dom";
-import { MdOutlineLogin } from "react-icons/md";
+import { login } from "../../apis/api";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: ""
+  });
+  const handleChange = (e) => {
+    e.preventDefault();
+    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+  };
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(loginData);
+    const response = await login(loginData);
+    console.log(response);
+    if (response.token) {
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("email", response.email);
+      localStorage.setItem("role", response.role);
+      switch (response.role) {
+        case "FARMER":
+          navigate("/farmer/home");
+          break;
+
+        case "WAREHOUSE_MANAGER":
+          navigate("/warehouse/home");
+          break;
+
+        case "COMPANY":
+          navigate("/company/home");
+          break;
+
+        case "SERVICE_PROVIDER":
+          navigate("/service/home");
+          break;
+
+        default:
+          navigate("/login");
+          break;
+      }
+    }
+  };
   return (
     <div className="flex justify-between h-[100dvh] py-6 bg-white">
       <div className="w-[55%] mt-3 px-[3%] h-full">
@@ -26,14 +69,22 @@ const Login = () => {
           <div className="mt-8 flex flex-col gap-4">
             <MainInput
               heading="Email"
-              placeholder="something@gnmail.com"
+              placeholder="something@gmail.com"
               type="email"
+              name="email"
+              value={loginData.email}
+              onChange={handleChange}
             />
             <MainInput
               heading="Password"
               placeholder="********"
               //   type="text"
               inputType={"password"}
+              name="password"
+              value={loginData.password}
+              onChange={handleChange}
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
             />
             <p className="font-[500] text-[1.125rem] text-right">
               Forget Password?
@@ -41,7 +92,7 @@ const Login = () => {
 
             <button
               className="mt-4 rounded-[1rem] bg-darkNavy w-full py-3 text-white flex gap-2 items-center justify-center"
-              //   onClick={handleSubmit}
+              onClick={handleSubmit}
             >
               Continue
               <CgPushRight className="text-[20px]" />

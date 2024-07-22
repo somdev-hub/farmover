@@ -1,18 +1,53 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import MainInput from "../../components/MainInput";
 import Checkbox from "@mui/material/Checkbox";
 import { Link } from "react-router-dom";
 import { MdOutlineLogin } from "react-icons/md";
 import { TbLogin2 } from "react-icons/tb";
+import { useDispatch, useSelector } from "react-redux";
+import { signup } from "../../apis/api";
+import { useNavigate } from "react-router-dom";
 
 const SetPassword = () => {
-  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [checked, setChecked] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const signupData = useSelector((state) => state.signup.signUpData);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(password, confirmPassword, checked);
+    if (signupData.password !== confirmPassword) {
+      alert("Password does not match");
+      return;
+    }
+
+    // dispatch(postSignUp(signupData));
+    const response = await signup(signupData);
+    console.log(response);
+    if (response.token) {
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("email", response.email);
+      localStorage.setItem("role", response.role);
+      switch (response.role) {
+        case "FARMER":
+          navigate("/farmer/home");
+          break;
+        case "WAREHOUSE_MANAGER":
+          navigate("/warehouse-registration");
+          break;
+        case "SERVICE_PROVIDER":
+          navigate("/services/home");
+          break;
+        case "COMPANY":
+          navigate("/company-info-add");
+          break;
+        default:
+          navigate("/login");
+          break;
+      }
+    }
   };
   return (
     <div className="flex justify-between h-[100dvh] py-6 bg-white">
@@ -39,8 +74,18 @@ const SetPassword = () => {
               placeholder="********"
               inputType={"password"}
               name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={signupData.password}
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+              onChange={(e) =>
+                dispatch({
+                  type: "signup/updateSignUpData",
+                  payload: {
+                    ...signupData,
+                    password: e.target.value
+                  }
+                })
+              }
             />
             <MainInput
               heading="Confirm Password"
@@ -48,6 +93,8 @@ const SetPassword = () => {
               inputType={"password"}
               name="confirmPassword"
               value={confirmPassword}
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <div className="flex gap-2 items-center mt-4">

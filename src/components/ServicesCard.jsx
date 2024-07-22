@@ -1,35 +1,50 @@
-import React from "react";
 import PropTypes from "prop-types";
-import green_tick from "../assets/green-tick.svg";
+import { Link } from "react-router-dom";
+import { Paper } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const ServicesCard = (props) => {
+const ServicesCard = ({ service }) => {
+  const navigator = useNavigate();
   return (
-    <div className="w-[19rem] h-[25rem] rounded-[1rem] bg-white shadow-md cursor-pointer">
+    <Paper
+      onClick={() =>
+        navigator("/farmer/services/view", {
+          state: { id: service.id }
+        })
+      }
+      sx={{
+        p: 1,
+        borderRadius: "1rem",
+        width: "15rem",
+        cursor: "pointer"
+        //   height:
+      }}
+    >
       <img
-        src="https://images.tractorgyan.com/uploads/26907/63159f84cb1e3_combine-harvester-1.webp"
+        src={service.serviceImage}
         alt=""
-        className="w-[100%] h-[42%] object-cover rounded-t-[1rem]"
+        className="object-cover w-[100%] h-[50%] rounded-[1rem]"
       />
-      <div className="px-4 py-4 ">
-        <div className="border-b-2 border-grey border-solid pb-4">
-          <h3 className="font-[600] text-[20px]">Mr. Monoj harvester</h3>
-          <p className="font-[600] text-brown text-base ">
-            Owner: Mr. Monoj Parida
-          </p>
+      <div className="mt-3 px-2">
+        <h3 className="text-[1.125rem] font-[600]">{service.serviceName}</h3>
+        <p className="text-[1rem] font-[500] text-brown">
+          {service.serviceType}
+        </p>
+        <div className="flex justify-between mt-2 items-center">
+          <p className="font-[500] text-[14px]">Owner</p>
+          <p className="text-[14px]">{service.owner}</p>
         </div>
-        <ul className="mt-4">
-          <li className="flex gap-3 mt-3">
-            <img src={green_tick} alt="" />
-            <span>
-              Fully operated harvester with 1 quintal producing capacity a day.
-            </span>
-          </li>
-        </ul>
+        <div className="flex justify-between mt-2 items-center">
+          <p className="font-[500] text-[14px]">Price per day</p>
+          <p className="text-[14px]">Rs.{service.pricePerDay}/-</p>
+        </div>
       </div>
-    </div>
+    </Paper>
   );
 };
 
-ServicesCard.propTypes = {};
+ServicesCard.propTypes = {
+  service: PropTypes.object.isRequired
+};
 
 export default ServicesCard;

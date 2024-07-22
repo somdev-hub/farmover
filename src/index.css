@@ -25,5 +25,36 @@ input {
 
 select {
   outline: none;
-  
+}
+
+.overflow-x-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.overlay-fade::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  z-index: -1;
+}
+
+.overlay-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  color: white; /* Ensure text is visible on the dark background */
+}
+
+input[type="number"] {
+  -webkit-appearance: none;
+}
+
+textarea {
+  outline: none;
+  height: auto;
 }

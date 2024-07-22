@@ -4,22 +4,33 @@ import { CgPushRight } from "react-icons/cg";
 import { Link } from "react-router-dom";
 import { MdOutlineLogin } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [signupData, setSignupData] = useState({
-    fullName: "",
-    email: "",
-    role: "",
-    phoneNumber: "",
-    address: ""
-  });
+  const dispatch = useDispatch();
+  const signupData = useSelector((state) => state.signup.signUpData);
+  // const [signupData, setSignupData] = useState({
+  //   fullName: "",
+  //   email: "",
+  //   role: "",
+  //   phoneNumber: "",
+  //   address: ""
+  // });
   const handleChange = (e) => {
-    setSignupData({ ...signupData, [e.target.name]: e.target.value });
+    e.preventDefault();
+    // setSignupData({ ...signupData, [e.target.name]: e.target.value });
+    dispatch({
+      type: "signup/updateSignUpData",
+      payload: {
+        ...signupData,
+        [e.target.name]: e.target.value
+      }
+    });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(signupData);
+    // console.log(signupData);
     navigate("/set-password");
   };
   return (
@@ -46,8 +57,8 @@ const Signup = () => {
               heading="Full Name"
               placeholder="Full Name"
               type="text"
-              name="fullName"
-              value={signupData.fullName}
+              name="uname"
+              value={signupData.uname}
               onChange={handleChange}
             />
             <MainInput
@@ -66,8 +77,14 @@ const Signup = () => {
                 options={[
                   "Farmer",
                   "Warehouse manager",
-                  "Company",
-                  "Service provider"
+                  "Service provider",
+                  "Company"
+                ]}
+                values={[
+                  "FARMER",
+                  "WAREHOUSE_MANAGER",
+                  "SERVICE_PROVIDER",
+                  "COMPANY"
                 ]}
                 name="role"
                 value={signupData.role}
@@ -77,8 +94,8 @@ const Signup = () => {
                 heading="Phone Number"
                 placeholder="9189281928"
                 // type=""
-                name="phoneNumber"
-                value={signupData.phoneNumber}
+                name="phone"
+                value={signupData.phone}
                 onChange={handleChange}
               />
             </div>
