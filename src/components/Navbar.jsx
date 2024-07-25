@@ -1,5 +1,5 @@
 import { Paper } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { IoMdNotifications } from "react-icons/io";
 import { useLocation } from "react-router-dom";
@@ -60,6 +60,14 @@ const Navbar = () => {
     {
       path: "/purchases",
       text: "Purchases"
+    },
+    {
+      path: "/create-article",
+      text: "Create Article"
+    },
+    {
+      path: "/create-video",
+      text: "Create Video"
     }
   ];
   return (

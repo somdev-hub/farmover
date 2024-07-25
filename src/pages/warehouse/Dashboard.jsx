@@ -8,11 +8,20 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Link } from "react-router-dom";
-import { getStorageCards } from "../../apis/api";
+import {
+  getStorageCards,
+  getWarehouseRevenueFromBookingsChartData,
+  getWarehouseUsageChartData
+} from "../../apis/api";
 import { storage_areas } from "../../assets/storages";
 
 const Dashboard = () => {
   const [storageCards, setStorageCards] = useState([]);
+  const [storageUsage, setStorageUsage] = useState({});
+  const [storageRevenueFromBookings, setStorageRevenueFromBookings] = useState(
+    {}
+  );
+  const [storageRevenueFromSales, setStorageRevenueFromSales] = useState({});
 
   const totalProductionOptions = {
     chart: {
@@ -30,33 +39,27 @@ const Dashboard = () => {
     },
 
     xAxis: {
-      categories: [
-        "Product 1",
-        "Product 2",
-        "Product 3",
-        "Product 4",
-        "Product 5"
-      ],
+      categories: storageUsage && Object.keys(storageUsage), // replace this with your actual data
       labels: {
         enabled: false
       }
     },
     yAxis: {
       title: {
-        text: "Production (in quintals)"
+        text: "Warehouse usage (in quintals)"
       }
     },
 
     series: [
       {
-        name: "Production",
-        data: [100, 200, 150, 300, 250] // replace this with your actual data
+        name: "Storage usage",
+        data: storageUsage && Object.values(storageUsage) // replace this with your actual data
       }
     ]
   };
   const totalRevenueOptions = {
     chart: {
-      type: "line",
+      type: "column",
       backgroundColor: "transparent",
       borderRadius: 10,
       height: 230,
@@ -74,20 +77,8 @@ const Dashboard = () => {
       }
     },
     xAxis: {
-      categories: [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-      ],
+      categories:
+        storageRevenueFromBookings && Object.keys(storageRevenueFromBookings), // replace this with your actual data
       labels: {
         enabled: false
       }
@@ -95,9 +86,42 @@ const Dashboard = () => {
     series: [
       {
         name: "Revenue",
-        data: [
-          577, 1388, 1500, 3000, 2500, 1000, 2000, 1500, 3000, 2500, 1000, 2000
-        ] // replace this with your actual data
+        data:
+          storageRevenueFromBookings &&
+          Object.values(storageRevenueFromBookings) // replace this with your actual data
+      }
+    ]
+  };
+  const totalRevenueFromSalesOptions = {
+    chart: {
+      type: "column",
+      backgroundColor: "transparent",
+      borderRadius: 10,
+      height: 230,
+      width: 350
+    },
+    title: {
+      text: ""
+    },
+    legend: {
+      enabled: false
+    },
+    yAxis: {
+      title: {
+        text: "Revenue (in Rs)"
+      }
+    },
+    xAxis: {
+      categories:
+        storageRevenueFromSales && Object.keys(storageRevenueFromSales), // replace this with your actual data
+      labels: {
+        enabled: false
+      }
+    },
+    series: [
+      {
+        name: "Revenue",
+        data: storageRevenueFromSales && Object.values(storageRevenueFromSales) // replace this with your actual data
       }
     ]
   };
@@ -133,11 +157,26 @@ const Dashboard = () => {
       const response = await getStorageCards();
       setStorageCards(response);
     };
+    const fetchStorageUsage = async () => {
+      const response = await getWarehouseUsageChartData();
+      setStorageUsage(response);
+    };
+    const fetchStorageRevenueFromBookings = async () => {
+      const response = await getWarehouseRevenueFromBookingsChartData();
+      setStorageRevenueFromBookings(response);
+    };
+    const fetchStorageRevenueFromSales = async () => {
+      const response = await getWarehouseRevenueFromBookingsChartData();
+      setStorageRevenueFromSales(response);
+    };
 
     fetchStorageCards();
+    fetchStorageUsage();
+    fetchStorageRevenueFromBookings();
+    fetchStorageRevenueFromSales();
   }, []);
   return (
-    <div className="mt-8">
+    <div className="mt-8 w-[98%]">
       <div className="flex gap-4">
         <Link to="/warehouse/add-storage" className="flex ">
           <div className="w-[17rem] px-6 py-4 rounded-[1rem] bg-white shadow-md flex flex-col items-center justify-evenly">
@@ -189,14 +228,14 @@ const Dashboard = () => {
         />
         <ChartCard
           options={totalRevenueOptions}
-          title="Total revenue"
-          subtitle="data since last year"
+          title="Total revenue from bookings"
+          subtitle="data since last month"
           desc="5% increase in total revenue"
         />
         <ChartCard
-          options={totalProductionOptions}
-          title="Total expenditure"
-          subtitle="data since last year"
+          options={totalRevenueFromSalesOptions}
+          title="Total revenue from sales"
+          subtitle="data since last month"
           desc="10% decrease in total expenditure"
         />
       </div>

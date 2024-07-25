@@ -16,6 +16,10 @@ const MainInput = ({
   showPassword,
   setShowPassword
 }) => {
+  const increaseTextareaHeight = (e) => {
+    e.target.style.height = "inherit";
+    e.target.style.height = `${25 + e.target.scrollHeight}px`;
+  };
   return (
     <div className="relative">
       <p className="font-[500]">{heading}</p>
@@ -53,11 +57,12 @@ const MainInput = ({
         </label>
       ) : type === "long-text" ? (
         <textarea
+          onKeyUp={increaseTextareaHeight}
           name={name}
           value={value}
           type={inputType ? inputType : "text"}
           onChange={onChange}
-          className={`shadow-[0px_2px_2px_rgba(0,_0,_0,_0.25)_inset] w-full rounded-[0.75rem] px-4 py-3 mt-3 bg-lightGrey min-h-[7rem]  ${
+          className={`shadow-[0px_2px_2px_rgba(0,_0,_0,_0.25)_inset] w-full rounded-[0.75rem] px-4 py-3 mt-3 bg-lightGrey min-h-[7rem] overflow-hidden ${
             font ? `text-[${font}]` : "text-base"
           } `}
           style={{ resize: "none" }}

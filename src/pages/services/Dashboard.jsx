@@ -123,7 +123,7 @@ const Dashboard = () => {
       }
     },
     xAxis: {
-      categories: [Object.keys(expenses)],
+      categories: expenses && [Object.keys(expenses)],
       labels: {
         enabled: false
       }
@@ -131,7 +131,7 @@ const Dashboard = () => {
     series: [
       {
         name: "expenses",
-        data: [Object.values(expenses)] // replace this with your actual data
+        data: expenses && [Object.values(expenses)] // replace this with your actual data
       }
     ]
   };

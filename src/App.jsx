@@ -42,6 +42,9 @@ import Marketplace from "./pages/companies/Marketplace";
 import { FaCartShopping } from "react-icons/fa6";
 import Purchases from "./pages/companies/Purchases";
 import VisitWarehouse from "./pages/companies/VisitWarehouse";
+import CreateArticle from "./pages/content-creator/CreateArticle";
+import ContentCreatorDashboard from "./pages/content-creator/Dashboard";
+import CreateVideo from "./pages/content-creator/CreateVideo";
 
 function Layout() {
   const routes = [
@@ -113,13 +116,13 @@ function WarehouseLayout() {
       name: "Learning",
       icon: FaBook,
       paths: ["/learning"],
-      path: "/farmer/learning"
+      path: "/warehouse/learning"
     },
     {
       name: "Calendar",
       icon: FaRegCalendar,
       paths: ["/calendar"],
-      path: "/farmer/calendar"
+      path: "/warehouse/calendar"
     }
   ];
   return (
@@ -220,6 +223,50 @@ function CompanyLayout() {
   );
 }
 
+const ContentCreaterLayout = () => {
+  const routes = [
+    {
+      name: "Dashboard",
+      icon: RxDashboard,
+      paths: ["/home"],
+      path: "/company/home"
+    },
+    {
+      name: "Marketplace",
+      icon: FaCartShopping,
+      paths: ["/marketplace", "/warehouse"],
+      path: "/company/marketplace"
+    },
+    {
+      name: "Purchases",
+      icon: MdOutlineAttachMoney,
+      paths: ["/purchases"],
+      path: "/company/purchases"
+    },
+    {
+      name: "Learning",
+      icon: FaBook,
+      paths: ["/learning"],
+      path: "/learning"
+    },
+    {
+      name: "Calendar",
+      icon: FaRegCalendar,
+      paths: ["/calendar"],
+      path: "/calendar"
+    }
+  ];
+  return (
+    <div className="">
+      <Sidebar routes={routes} />
+      <div className=" overflow-x-scroll noScrollbar ml-[20rem] pb-4">
+        <Navbar />
+        <Outlet />
+      </div>
+    </div>
+  );
+};
+
 function RoleRedirect() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -280,6 +327,8 @@ function App() {
               path="/warehouse/warehouse-details"
               element={<WarehouseDetails />}
             />
+            <Route path="/warehouse/learning" element={<Learning />} />
+            <Route path="/warehouse/calendar" element={<Calendar />} />
           </Route>
           <Route path="/service" element={<ServiceLayout />}>
             <Route path="/service/home" element={<Dashboard />} />
@@ -290,12 +339,33 @@ function App() {
               element={<ServiceDetails />}
             />
             <Route path="/service/contracts" element={<Contracts />} />
+            <Route path="/service/calendar" element={<Calendar />} />
+            <Route path="/service/learning" element={<Learning />} />
+          </Route>
+          <Route path="/content-creator" element={<ContentCreaterLayout />}>
+            <Route
+              path="/content-creator/home"
+              element={<ContentCreatorDashboard />}
+            />
+            <Route
+              path="/content-creator/create-article"
+              element={<CreateArticle />}
+            />
+            <Route
+              path="/content-creator/create-video"
+              element={<CreateVideo />}
+            />
+
+            <Route path="/content-creator/calendar" element={<Calendar />} />
+            <Route path="/content-creator/learning" element={<Learning />} />
           </Route>
           <Route path="/company" element={<CompanyLayout />}>
             <Route path="/company/home" element={<CompanyDashboard />} />
             <Route path="/company/marketplace" element={<Marketplace />} />
             <Route path="/company/purchases" element={<Purchases />} />
             <Route path="/company/warehouse" element={<VisitWarehouse />} />
+            <Route path="/company/learning" element={<Learning />} />
+            <Route path="/company/calendar" element={<Calendar />} />
           </Route>
           <Route path="/signup" element={<Signup />} />
           <Route path="/set-password" element={<SetPassword />} />

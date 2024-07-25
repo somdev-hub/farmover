@@ -615,3 +615,108 @@ export const getCompanyCropCards = async () => {
     console.log(error);
   }
 };
+
+export const getCropsSalesReport = async () => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/production/sales-report?email=${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getOrderOverview = async () => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/production/overview?email=${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getWarehouseSalesOverview = async () => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/warehouse/overview?email=${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getWarehouseUsageChartData = async () => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/chart/warehouse-usage?email=${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getWarehouseRevenueFromBookingsChartData = async () => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/chart/warehouse-revenue/bookings?email=${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getWarehouseRevenueFromSalesChartData = async () => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/chart/warehouse-revenue/sales?email=${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

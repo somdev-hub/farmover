@@ -10,25 +10,31 @@ import TableRow from "@mui/material/TableRow";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
+  getCropsSalesReport,
   getEachProductionData,
   getExpenseChartData,
+  getOrderOverview,
   getProductionChartData,
   getRevenueChartData
 } from "../../apis/api";
+import { FaMinus } from "react-icons/fa6";
+import { crops } from "../../assets/crops";
 
 const Dashboard = () => {
   const [productionCard, setProductioCard] = useState([]);
   const [expenses, setExpenses] = useState({});
   const [revenue, setRevenue] = useState({});
   const [productionData, setProductionData] = useState([]);
+  const [cropSalesReport, setCropSalesReport] = useState([]);
+  const [orderOverview, setOrderOverview] = useState([]);
 
   const totalProductionOptions = {
     chart: {
       type: "column",
       backgroundColor: "transparent",
       borderRadius: 10,
-      height: 230,
-      width: 350
+      height: 210,
+      width: 330
     },
     title: {
       text: ""
@@ -52,7 +58,7 @@ const Dashboard = () => {
     series: [
       {
         name: "Production",
-        data: [Object.values(productionData)] // replace this with your actual data
+        data: [productionData && Object.values(productionData)] // replace this with your actual data
       }
     ]
   };
@@ -62,8 +68,8 @@ const Dashboard = () => {
       type: "line",
       backgroundColor: "transparent",
       borderRadius: 10,
-      height: 230,
-      width: 350
+      height: 210,
+      width: 330
     },
     title: {
       text: ""
@@ -85,7 +91,7 @@ const Dashboard = () => {
     series: [
       {
         name: "Revenue",
-        data: [Object.values(revenue)] // replace this with your actual data
+        data: [revenue && Object.values(revenue)] // replace this with your actual data
       }
     ]
   };
@@ -95,8 +101,8 @@ const Dashboard = () => {
       type: "line",
       backgroundColor: "transparent",
       borderRadius: 10,
-      height: 230,
-      width: 350
+      height: 210,
+      width: 330
     },
     title: {
       text: ""
@@ -118,7 +124,7 @@ const Dashboard = () => {
     series: [
       {
         name: "Expenditure",
-        data: [Object.values(expenses)] // replace this with your actual data
+        data: [expenses && Object.values(expenses)] // replace this with your actual data
       }
     ]
   };
@@ -155,6 +161,7 @@ const Dashboard = () => {
       revenue: "1000"
     }
   ];
+
   useEffect(() => {
     const fetchProductionCard = async () => {
       const response = await getEachProductionData();
@@ -169,11 +176,21 @@ const Dashboard = () => {
       setRevenue(responseRevenue);
       setProductionData(responseProduction);
     };
+    const fetchCropSalesReport = async () => {
+      const response = await getCropsSalesReport();
+      setCropSalesReport(response);
+    };
+    const fetchOrderOverview = async () => {
+      const response = await getOrderOverview();
+      setOrderOverview(response);
+    };
     fetchProductionCard();
     fetchExpensesAndRevenue();
+    fetchCropSalesReport();
+    fetchOrderOverview();
   }, []);
   return (
-    <div className="mt-8">
+    <div className="mt-8 w-[98%]">
       <div className="">
         <div className="overflow-x-scroll flex gap-4 py-4">
           <div className="w-fit min-w-[16rem]">
@@ -262,10 +279,10 @@ const Dashboard = () => {
           options={totalProductionOptions}
           title="Total production"
           subtitle="data since last month"
-          desc={`${Object.values(productionData)?.reduce(
-            (a, b) => a + b,
-            0
-          )} kilograms of total productions`}
+          desc={`${
+            productionData &&
+            Object.values(productionData)?.reduce((a, b) => a + b, 0)
+          } kilograms of total productions`}
         />
         <ChartCard
           options={totalRevenueOptions}
@@ -281,7 +298,7 @@ const Dashboard = () => {
         />
       </div>
       <div className="flex gap-4 mt-8">
-        <div className="px-6  py-4 rounded-[1rem] bg-white shadow-md">
+        <div className="px-6  py-4 rounded-[1rem] bg-white shadow-md flex-1">
           <div className="">
             <div className="">
               <h3 className="text-[24px] font-[600]">Total sales</h3>
@@ -298,8 +315,8 @@ const Dashboard = () => {
                     align="left"
                     sx={{
                       fontSize: "16px",
-                      fontWeight: "bold",
-                      paddingRight: "3rem"
+                      fontWeight: "bold"
+                      // paddingRight: "3rem"
                     }}
                   >
                     Serial No
@@ -308,8 +325,8 @@ const Dashboard = () => {
                     align="left"
                     sx={{
                       fontSize: "16px",
-                      fontWeight: "bold",
-                      paddingRight: "3rem"
+                      fontWeight: "bold"
+                      // paddingRight: "3rem"
                     }}
                   >
                     Company
@@ -318,8 +335,8 @@ const Dashboard = () => {
                     align="left"
                     sx={{
                       fontSize: "16px",
-                      fontWeight: "bold",
-                      paddingRight: "3rem"
+                      fontWeight: "bold"
+                      // paddingRight: "3rem"
                     }}
                   >
                     Purchase
@@ -328,18 +345,18 @@ const Dashboard = () => {
                     align="left"
                     sx={{
                       fontSize: "16px",
-                      fontWeight: "bold",
-                      paddingRight: "3rem"
+                      fontWeight: "bold"
+                      // paddingRight: "3rem"
                     }}
                   >
-                    Warehouse
+                    Date
                   </TableCell>
                   <TableCell
                     align="left"
                     sx={{
                       fontSize: "16px",
-                      fontWeight: "bold",
-                      paddingRight: "3rem"
+                      fontWeight: "bold"
+                      // paddingRight: "3rem"
                     }}
                   >
                     Revenue
@@ -347,7 +364,7 @@ const Dashboard = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orders.map((order, index) => (
+                {cropSalesReport?.map((order, index) => (
                   <TableRow key={index}>
                     <TableCell
                       sx={{
@@ -361,21 +378,21 @@ const Dashboard = () => {
                         fontSize: "16px"
                       }}
                     >
-                      {order.company}
+                      {order.companyName}
                     </TableCell>
                     <TableCell
                       sx={{
                         fontSize: "16px"
                       }}
                     >
-                      {order.purchase}
+                      {crops.find((c) => c.value === order.crop)?.name}
                     </TableCell>
                     <TableCell
                       sx={{
                         fontSize: "16px"
                       }}
                     >
-                      {order.warehouse}
+                      {order.date}
                     </TableCell>
                     <TableCell
                       sx={{
@@ -390,7 +407,7 @@ const Dashboard = () => {
             </Table>
           </TableContainer>
         </div>
-        <div className="px-6 py-4 rounded-[1rem] bg-white shadow-md">
+        <div className="px-6 py-4 rounded-[1rem] bg-white shadow-md w-[35%]">
           <div className="">
             <div className="">
               <h3 className="text-[24px] font-[600]">Order overview</h3>
@@ -399,51 +416,32 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
-          <div className="mt-7">
-            <div className="flex gap-4">
-              <div className="bg-lightGreen rounded-full p-4 box-border ">
-                <FaPlus className="text-white text-[1.3rem]" />
-              </div>
-              <div className="">
-                <h3 className="font-[500] text-[18px]">
-                  Rs. 12000/- from Tata plant inc.
-                </h3>
-                <p className="font-[500] text-brown">SUN 12TH JAN 2024</p>
-              </div>
-            </div>
-            <div className="flex gap-4 mt-5">
-              <div className="bg-lightGreen rounded-full p-4 box-border ">
-                <FaPlus className="text-white text-[1.3rem]" />
-              </div>
-              <div className="">
-                <h3 className="font-[500] text-[18px]">
-                  Rs. 12000/- from Tata plant inc.
-                </h3>
-                <p className="font-[500] text-brown">SUN 12TH JAN 2024</p>
-              </div>
-            </div>
-            <div className="flex gap-4 mt-5">
-              <div className="bg-lightGreen rounded-full p-4 box-border ">
-                <FaPlus className="text-white text-[1.3rem]" />
-              </div>
-              <div className="">
-                <h3 className="font-[500] text-[18px]">
-                  Rs. 12000/- from Tata plant inc.
-                </h3>
-                <p className="font-[500] text-brown">SUN 12TH JAN 2024</p>
-              </div>
-            </div>
-            <div className="flex gap-4 mt-5">
-              <div className="bg-lightGreen rounded-full p-4 box-border ">
-                <FaPlus className="text-white text-[1.3rem]" />
-              </div>
-              <div className="">
-                <h3 className="font-[500] text-[18px]">
-                  Rs. 12000/- from Tata plant inc.
-                </h3>
-                <p className="font-[500] text-brown">SUN 12TH JAN 2024</p>
-              </div>
-            </div>
+          <div className="mt-7 flex flex-col gap-4">
+            {orderOverview?.map((order, index) => {
+              return (
+                <div key={index} className="flex gap-4 items-center">
+                  {order.type === "CREDIT" ? (
+                    <div className="bg-lightGreen rounded-full p-4 box-border flex items-center justify-center">
+                      <FaPlus className="text-white text-[1.3rem]" />
+                    </div>
+                  ) : (
+                    <div className=" rounded-full bg-red-400 p-4 box-border flex items-center justify-center">
+                      <FaMinus className="text-white text-[1.3rem]" />
+                    </div>
+                  )}
+                  <div className="">
+                    <h3 className="font-[500] text-[18px]">
+                      Rs. {order.total}/- from{" "}
+                      {order?.from && order.from.length > 30
+                        ? order.from.slice(0, 30) + "..."
+                        : order.from}
+                      .
+                    </h3>
+                    <p className="font-[500] text-brown">{order.date}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

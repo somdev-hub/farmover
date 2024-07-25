@@ -1,9 +1,8 @@
-import React from "react";
-import { Paper } from "@mui/material";
+import { Pagination, Paper } from "@mui/material";
 
 const Learning = () => {
   return (
-    <div>
+    <div className="w-[98%]">
       <div className="mt-10">
         <Paper
           sx={{
@@ -16,10 +15,10 @@ const Learning = () => {
             List of curated educational videos for you
           </p>
 
-          <div className="mt-6 flex gap-7 flex-wrap">
+          <div className="mt-3 flex justify-start items-center flex-wrap">
             {Array.from({ length: 8 }).map((_, index) => {
               return (
-                <div className="w-[13rem]" key={index}>
+                <div className="w-[13rem] my-3 mr-4" key={index}>
                   <img
                     src="https://cdn.pixabay.com/photo/2015/02/04/13/23/tea-623796_1280.jpg"
                     alt=""
@@ -49,17 +48,8 @@ const Learning = () => {
               );
             })}
           </div>
-
-          <div className="mt-6 flex justify-center items-center gap-4">
-            <div className="rounded-full border-solid border-2  box-border w-6 text-[12px] h-6 font-[500] text-center flex justify-center items-center">
-              1
-            </div>
-            <div className="rounded-full border-solid border-2  box-border w-6 text-[12px] h-6 font-[500] text-center flex justify-center items-center">
-              2
-            </div>
-            <div className="rounded-full border-solid border-2  box-border w-6 text-[12px] h-6 font-[500] text-center flex justify-center items-center">
-              3
-            </div>
+          <div className="my-4 flex items-center justify-center">
+            <Pagination count={5} />
           </div>
         </Paper>
 
@@ -75,7 +65,7 @@ const Learning = () => {
                 <Paper
                   key={index}
                   sx={{
-                    width: "18rem",
+                    width: "23.5%",
                     p: 1,
                     borderRadius: "1rem"
                   }}
