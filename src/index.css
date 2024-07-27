@@ -70,3 +70,21 @@ textarea {
   padding: 1rem;
   background-color: #f0f2f5;
 }
+
+.description-container {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  max-height: 0;
+}
+
+.description-container.expanded {
+  max-height: 500px; /* Adjust this value based on the content height */
+}
+
+.hover-effect {
+  transition: background-color 0.3s ease;
+}
+
+.hover-effect:hover {
+  background-color: rgba(128, 128, 128, 0.1); /* Faded grey effect */
+}

@@ -96,6 +96,10 @@ const CreateVideo = () => {
           <h3 className="font-[500]">Enter video description</h3>
           <MainInput placeholder="Start typing here..." type="long-text" />
         </Paper>
+
+        <div className="flex mt-4 justify-end">
+          <Button variant="contained">Upload</Button>
+        </div>
       </div>
     </div>
   );

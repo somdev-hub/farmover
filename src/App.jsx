@@ -18,7 +18,11 @@ import AddProduction from "./pages/farmers/AddProduction";
 import ProductionHistory from "./pages/farmers/ProductionHistory";
 import { RxDashboard } from "react-icons/rx";
 import { LuWarehouse } from "react-icons/lu";
-import { MdDesignServices, MdOutlineAttachMoney } from "react-icons/md";
+import {
+  MdDesignServices,
+  MdDriveFolderUpload,
+  MdOutlineAttachMoney
+} from "react-icons/md";
 import { FaBook } from "react-icons/fa";
 import { FaRegCalendar } from "react-icons/fa";
 import { store } from "./redux/store";
@@ -45,6 +49,9 @@ import VisitWarehouse from "./pages/companies/VisitWarehouse";
 import CreateArticle from "./pages/content-creator/CreateArticle";
 import ContentCreatorDashboard from "./pages/content-creator/Dashboard";
 import CreateVideo from "./pages/content-creator/CreateVideo";
+import Uploads from "./pages/content-creator/Uploads";
+import VideoView from "./pages/content-creator/VideoView";
+import ArticleView from "./pages/content-creator/ArticleView";
 
 function Layout() {
   const routes = [
@@ -228,14 +235,14 @@ const ContentCreaterLayout = () => {
     {
       name: "Dashboard",
       icon: RxDashboard,
-      paths: ["/home"],
-      path: "/company/home"
+      paths: ["/home", "/create-article", "/create-video"],
+      path: "/content-creator/home"
     },
     {
-      name: "Marketplace",
-      icon: FaCartShopping,
-      paths: ["/marketplace", "/warehouse"],
-      path: "/company/marketplace"
+      name: "Uploads",
+      icon: MdDriveFolderUpload,
+      paths: ["/uploads", "/video-view", "/article-view"],
+      path: "/content-creator/uploads"
     },
     {
       name: "Purchases",
@@ -354,6 +361,12 @@ function App() {
             <Route
               path="/content-creator/create-video"
               element={<CreateVideo />}
+            />
+            <Route path="/content-creator/uploads" element={<Uploads />} />
+            <Route path="/content-creator/video-view" element={<VideoView />} />
+            <Route
+              path="/content-creator/article-view"
+              element={<ArticleView />}
             />
 
             <Route path="/content-creator/calendar" element={<Calendar />} />

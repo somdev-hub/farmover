@@ -68,6 +68,18 @@ const Navbar = () => {
     {
       path: "/create-video",
       text: "Create Video"
+    },
+    {
+      path: "/uploads",
+      text: "Uploads"
+    },
+    {
+      path: "/video-view",
+      text: "Your Video"
+    },
+    {
+      path: "/article-view",
+      text: "Your Article"
     }
   ];
   return (
