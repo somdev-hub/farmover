@@ -1,10 +1,12 @@
 import { Paper } from "@mui/material";
 import { useState } from "react";
 import { CgProfile } from "react-icons/cg";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdNotifications } from "react-icons/io";
+import { MdOutlineSearch } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ setActivateSidebar }) => {
   const location = useLocation();
   const [profileVisible, setProfileVisible] = useState(false);
   const currentRoute = "/" + location.pathname.split("/")[2];
@@ -83,7 +85,15 @@ const Navbar = () => {
     }
   ];
   return (
-    <div className="mt-[4vh] flex justify-between w-[75vw] items-center">
+    <div className="mt-4 sm:mt-[4vh] sm:flex sm:justify-between sm:w-[75vw] items-center">
+      <div className="mb-6 flex items-center justify-between sm:hidden">
+        <GiHamburgerMenu
+          className="text-2xl"
+          onClick={() => setActivateSidebar(true)}
+        />
+        <p className="font-[500] text-[1.125rem]">FarmOver</p>
+        <MdOutlineSearch className="text-2xl" />
+      </div>
       <div className="">
         {["/home", "/add-production", "/production-history"].includes(
           currentRoute
@@ -104,7 +114,7 @@ const Navbar = () => {
           })
         )}
       </div>
-      <div className="flex gap-4 items-center">
+      <div className="sm:flex gap-4 items-center hidden">
         <input
           type="text"
           className="

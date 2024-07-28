@@ -7,9 +7,9 @@ const CreateVideo = () => {
   const [videoTitle, setVideoTitle] = useState("");
   const fileInputRef = useRef(null);
   return (
-    <div className="mt-8 w-[95%]">
-      <div className="flex w-full gap-4 h-auto">
-        <div className="flex-1">
+    <div className="mt-8 sm:w-[95%]">
+      <div className="flex flex-col-reverse sm:flex-row w-full gap-4 h-auto">
+        <div className="sm:flex-1">
           <Paper
             sx={{
               p: 2,
@@ -34,11 +34,12 @@ const CreateVideo = () => {
             />
           </Paper>
         </div>
-        <div className="flex-1">
+        <div className="sm:flex-1 sm:h-auto min-h-[10rem]">
           <Paper
             sx={{
               p: 2,
               borderRadius: "1rem",
+              minHeight: "inherit",
               height: "100%"
             }}
           >
@@ -63,7 +64,7 @@ const CreateVideo = () => {
               </div>
             ) : (
               <div
-                className="border-dashed border-2 border-grey rounded-lg w-full h-full flex items-center justify-center cursor-pointer"
+                className="border-dashed border-2 border-grey rounded-lg w-full h-full flex items-center justify-center cursor-pointer min-h-[inherit]"
                 onClick={() => fileInputRef?.current?.click()}
               >
                 <h4 className="text-center">

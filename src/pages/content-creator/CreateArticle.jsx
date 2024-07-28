@@ -14,7 +14,7 @@ const CreateArticle = () => {
     console.log(articleTitle);
   };
   return (
-    <div className="mt-8 w-[95%]">
+    <div className="mt-8 sm:w-[95%]">
       {/* <h3 className="font-[600] text-[1.25rem]">Create your article</h3> */}
       <div className="">
         <Paper

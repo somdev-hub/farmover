@@ -1,13 +1,14 @@
 import { Paper } from "@mui/material";
 import sample_video from "../../assets/sample_video.mp4";
 import { useState } from "react";
+import { MdDelete, MdOutlineUnpublished, MdUpdate } from "react-icons/md";
 
 const VideoView = () => {
   const [expandDesc, setExpandDesc] = useState(false);
   return (
-    <div className="mt-8 gap-4 w-[98%]">
-      <div className="flex gap-4">
-        <div className="w-[65%]">
+    <div className="mt-8 gap-4 sm:w-[98%]">
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="sm:w-[65%]">
           <Paper
             sx={{
               p: 1,
@@ -97,8 +98,61 @@ const VideoView = () => {
             </div>
           </Paper>
         </div>
-        <div className="w-[35%]">
-          <h3 className="font-[500] text-[1.125rem]">More of your videos</h3>
+        <div className="sm:w-[35%]">
+          <h3 className="font-[500] text-[1.125rem]">Actions</h3>
+
+          <div className="mt-4 w-full">
+            <Paper
+              sx={{
+                p: 2,
+                borderRadius: "1rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                fontWeight: "600",
+                cursor: "pointer",
+                width: "100%"
+              }}
+            >
+              <MdOutlineUnpublished className="text-2xl" />
+              Unpublish video
+            </Paper>
+            <Paper
+              sx={{
+                p: 2,
+                borderRadius: "1rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                fontWeight: "600",
+                cursor: "pointer",
+                width: "100%",
+                marginTop: "0.75rem"
+              }}
+            >
+              <MdUpdate className="text-2xl" />
+              Update video
+            </Paper>
+            <Paper
+              sx={{
+                p: 2,
+                borderRadius: "1rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                fontWeight: "600",
+                cursor: "pointer",
+                width: "100%",
+                marginTop: "0.75rem"
+              }}
+            >
+              <MdDelete className="text-2xl" />
+              Delete video
+            </Paper>
+          </div>
+          <h3 className="font-[500] text-[1.125rem] mt-6">
+            More of your videos
+          </h3>
           <div className="mt-4 flex flex-col gap-2">
             {Array.from({ length: 3 }).map((_, i) => {
               return (

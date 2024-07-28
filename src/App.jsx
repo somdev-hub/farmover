@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import FarmerDashboard from "./pages/farmers/Dashboard";
 import WarehouseDashboard from "./pages/warehouse/Dashboard";
@@ -263,11 +263,26 @@ const ContentCreaterLayout = () => {
       path: "/calendar"
     }
   ];
+  const [activateSidebar, setActivateSidebar] = useState(false);
   return (
     <div className="">
-      <Sidebar routes={routes} />
-      <div className=" overflow-x-scroll noScrollbar ml-[20rem] pb-4">
-        <Navbar />
+      <Sidebar
+        routes={routes}
+        activateSidebar={activateSidebar}
+        setActivateSidebar={setActivateSidebar}
+      />
+      <div
+        className={`${
+          activateSidebar
+            ? "blur-[2px] h-[100dvh] overflow-hidden"
+            : "overflow-x-scroll"
+        } noScrollbar sm:ml-[20rem] pb-4 px-4 sm:px-0`}
+        onClick={() => {
+          if (activateSidebar) setActivateSidebar(false);
+          // console.log("yes");
+        }}
+      >
+        <Navbar setActivateSidebar={setActivateSidebar} />
         <Outlet />
       </div>
     </div>

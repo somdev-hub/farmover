@@ -1,46 +1,19 @@
 import { IoMdSettings } from "react-icons/io";
 import { MdLogout } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const Sidebar = ({ routes }) => {
+const Sidebar = ({ routes, activateSidebar, setActivateSidebar }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const currentRoute = "/" + location.pathname.split("/")[2];
-  console.log(currentRoute);
-  // const routes = [
-  //   {
-  //     name: "Dashboard",
-  //     icon: RxDashboard,
-  //     paths: ["/", "/add-production","/production-history"],
-  //     path: "/"
-  //   },
-  //   {
-  //     name: "Warehouse",
-  //     icon: LuWarehouse,
-  //     paths: ["/warehouse"],
-  //     path: "/warehouse"
-  //   },
-  //   {
-  //     name: "Services",
-  //     icon: MdDesignServices,
-  //     paths: ["/services"],
-  //     path: "/services"
-  //   },
-  //   {
-  //     name: "Learning",
-  //     icon: FaBook,
-  //     paths: ["/learning"],
-  //     path: "/learning"
-  //   },
-  //   {
-  //     name: "Calendar",
-  //     icon: FaRegCalendar,
-  //     paths: ["/calendar"],
-  //     path: "/calendar"
-  //   }
-  // ];
+
   return (
-    <div className="h-[100vh] items-center flex fixed">
-      <div className="bg-darkNavy h-[95vh] w-[17rem] rounded-[2rem]  ml-[1rem] flex flex-col justify-between py-8">
+    <div
+      className={`h-[100dvh] items-center fixed sm:left-0 ${
+        activateSidebar ? "left-0" : "-left-full"
+      } transition-all duration-300 sm:flex z-50`}
+    >
+      <div className="bg-darkNavy sm:h-[95vh] sm:w-[17rem] h-full w-[75vw] sm:rounded-[2rem]  sm:ml-[1rem] flex flex-col justify-between py-6 sm:py-8">
         <div className="">
           <div className="px-7">
             <h2 className="font-poppins text-[1.8rem] text-white text-center font-[600] ">
@@ -52,14 +25,19 @@ const Sidebar = ({ routes }) => {
             {routes?.map((route, index) => {
               return (
                 <li
+                  onClick={() => {
+                    navigate(route.path);
+                    setActivateSidebar(false);
+                  }}
                   key={index}
                   className={`${
                     route.paths.includes(currentRoute)
                       ? "bg-white rounded-tr-[1rem] box-border rounded-br-[1rem] py-2 pr-6"
                       : ""
-                  } cursor-pointer  mb-6 pl-10 w-fit`}
+                  } cursor-pointer  mb-6 pl-6 sm:pl-10 w-fit`}
                 >
-                  <Link to={route.path} className="flex items-center gap-4">
+                  {/* <Link to={route.path} className="flex items-center gap-4"> */}
+                  <div className="flex items-center gap-4">
                     <route.icon
                       className={`${
                         route.paths.includes(currentRoute)
@@ -76,7 +54,8 @@ const Sidebar = ({ routes }) => {
                     >
                       {route.name}
                     </span>
-                  </Link>
+                  </div>
+                  {/* </Link> */}
                 </li>
               );
             })}

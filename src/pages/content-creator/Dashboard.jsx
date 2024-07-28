@@ -28,9 +28,9 @@ const Dashboard = () => {
     { label: "Warehouse managers", value: 200 }
   ];
   return (
-    <div className="mt-8 w-[98%]">
+    <div className="mt-8 sm:w-[98%]">
       <h3 className="font-[600] text-[1.125rem]">Upload insights</h3>
-      <div className="flex mt-4 gap-4">
+      <div className="flex flex-col sm:flex-row mt-4 gap-4">
         <div className="">
           <Paper
             onClick={() => navigate("/content-creator/create-video")}
@@ -68,211 +68,222 @@ const Dashboard = () => {
             <p className="font-[500]">Create article</p>
           </Paper>
         </div>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 flex-col sm:flex-row items-center">
+          <div className="w-full sm:w-[15rem] h-full">
+            <Paper
+              sx={{
+                p: 1,
+                px: 2,
+                borderRadius: "1rem",
+                display: "flex",
+
+                width: "100%",
+                height: "100%"
+              }}
+            >
+              <div className="flex flex-col justify-around">
+                <div className="border-b-2 border-solid pb-2 flex gap-4 items-center">
+                  <img src={article} className="w-6 h-6" alt="" />
+                  <p className="font-[500] sm:text-[1.125rem]">
+                    How to take care of your plant
+                  </p>
+                </div>
+                <div className="flex justify-between sm:mt-0 mt-2">
+                  <div className="font-[500] flex gap-1 items-center">
+                    <FaRegEye />
+                    <p>1000</p>
+                  </div>
+                  <div className="font-[500] flex gap-1 items-center">
+                    <FaRegCommentAlt />
+                    <p>1000</p>
+                  </div>
+                  <div className="font-[500] flex gap-1 items-center">
+                    <BiUpvote />
+                    <p>1000</p>
+                  </div>
+                </div>
+              </div>
+            </Paper>
+          </div>
+          <div className="w-full sm:w-[15rem] h-full">
+            <Paper
+              sx={{
+                p: 1,
+                px: 2,
+                borderRadius: "1rem",
+                display: "flex",
+
+                width: "100%",
+                height: "100%"
+              }}
+            >
+              <div className="flex flex-col justify-around">
+                <div className="border-b-2 border-solid pb-2 flex items-center gap-4">
+                  <img src={video} className="w-6 h-6" alt="" />
+                  <p className="font-[500] sm:text-[1.125rem]">
+                    How to take care of your plant
+                  </p>
+                </div>
+                <div className="flex justify-between sm:mt-0 mt-2">
+                  <div className="font-[500] flex gap-1 items-center">
+                    <FaRegEye />
+                    <p>1000</p>
+                  </div>
+                  <div className="font-[500] flex gap-1 items-center">
+                    <FaRegCommentAlt />
+                    <p>1000</p>
+                  </div>
+                  <div className="font-[500] flex gap-1 items-center">
+                    <BiUpvote />
+                    <p>1000</p>
+                  </div>
+                </div>
+              </div>
+            </Paper>
+          </div>
+        </div>
+      </div>
+      <h3 className="font-[600] text-[1.125rem] mt-6">Upload analytics</h3>
+      <div className="flex sm:gap-4 flex-col sm:flex-row mt-[8rem]">
+        <div className="w-full sm:w-[25rem]">
           <Paper
             sx={{
-              p: 1,
-              px: 2,
+              p: 2,
               borderRadius: "1rem",
-              display: "flex",
-
-              width: "15rem",
-              height: "100%"
+              position: "relative",
+              width: "100%"
             }}
           >
-            <div className="flex flex-col justify-around">
-              <div className="border-b-2 border-solid pb-2 flex gap-4 items-center">
-                <img src={article} className="w-6 h-6" alt="" />
-                <p className="font-[500] text-[1.125rem]">
-                  How to take care of your plant
-                </p>
-              </div>
-              <div className="flex justify-between ">
-                <div className="font-[500] flex gap-1 items-center">
-                  <FaRegEye />
-                  <p>1000</p>
-                </div>
-                <div className="font-[500] flex gap-1 items-center">
-                  <FaRegCommentAlt />
-                  <p>1000</p>
-                </div>
-                <div className="font-[500] flex gap-1 items-center">
-                  <BiUpvote />
-                  <p>1000</p>
-                </div>
-              </div>
+            <div className="absolute w-[90%] bg-lightGreen top-[-6rem] rounded-lg flex">
+              <BarChart
+                series={[
+                  { data: [400, 200, 500], label: "Video" },
+                  { data: [100, 600, 350], label: "Article" }
+                ]}
+                xAxis={[
+                  {
+                    scaleType: "band",
+                    data: ["Farmers", "Service providers", "Warehouse managers"]
+                  }
+                ]}
+                // barWidthRatio={0.5}
+                width={400}
+                height={250}
+              />
+            </div>
+            <div className="mt-[10rem]">
+              <h3 className="font-[500] text-[1.125rem]">
+                Video and article view count(by roles)
+              </h3>
+              <p className="font-[500] text-brown mt-2">
+                This chart shows the number of views of videos and articles by
+                different roles
+              </p>
             </div>
           </Paper>
+        </div>
+        <div className="w-full sm:w-[25rem] mt-[8rem] sm:mt-0">
           <Paper
             sx={{
-              p: 1,
-              px: 2,
+              p: 2,
               borderRadius: "1rem",
-              display: "flex",
-
-              width: "15rem",
-              height: "100%"
+              position: "relative",
+              width: "100%"
             }}
           >
-            <div className="flex flex-col justify-around">
-              <div className="border-b-2 border-solid pb-2 flex items-center gap-4">
-                <img src={video} className="w-6 h-6" alt="" />
-                <p className="font-[500] text-[1.125rem]">
-                  How to take care of your plant
-                </p>
-              </div>
-              <div className="flex justify-between ">
-                <div className="font-[500] flex gap-1 items-center">
-                  <FaRegEye />
-                  <p>1000</p>
-                </div>
-                <div className="font-[500] flex gap-1 items-center">
-                  <FaRegCommentAlt />
-                  <p>1000</p>
-                </div>
-                <div className="font-[500] flex gap-1 items-center">
-                  <BiUpvote />
-                  <p>1000</p>
-                </div>
-              </div>
+            <div className="absolute w-[90%] bg-lightGreen top-[-6rem] rounded-lg flex">
+              <LineChart
+                series={[
+                  {
+                    data: [
+                      100, 200, 300, 400, 375, 180, 600, 750, 890, 1100, 1150,
+                      1200
+                    ],
+                    label: "Video"
+                  },
+                  {
+                    data: [
+                      200, 150, 400, 500, 350, 700, 490, 900, 1056, 760, 1130,
+                      1300
+                    ],
+                    label: "Article"
+                  }
+                ]}
+                xAxis={[
+                  {
+                    scaleType: "band",
+                    data: [
+                      "January",
+                      "February",
+                      "March",
+                      "April",
+                      "May",
+                      "June",
+                      "July",
+                      "August",
+                      "September",
+                      "October",
+                      "November",
+                      "December"
+                    ]
+                  }
+                ]}
+                // barWidthRatio={0.5}
+                width={400}
+                height={250}
+              />
+            </div>
+            <div className="mt-[10rem]">
+              <h3 className="font-[500] text-[1.125rem]">
+                Video and article views overview
+              </h3>
+              <p className="font-[500] text-brown mt-2">
+                This chart shows the number of views of videos and articles over
+                time
+              </p>
+            </div>
+          </Paper>
+        </div>
+        <div className="w-full sm:w-[25rem] mt-[8rem] sm:mt-0">
+          <Paper
+            sx={{
+              p: 2,
+              borderRadius: "1rem",
+              position: "relative",
+              width: "100%"
+            }}
+          >
+            <div className="absolute w-[90%] bg-lightGreen top-[-6rem] rounded-lg flex">
+              <BarChart
+                series={[
+                  { data: [150, 180, 400], label: "Video" },
+                  { data: [110, 300, 550], label: "Article" }
+                ]}
+                xAxis={[
+                  {
+                    scaleType: "band",
+                    data: ["Farmers", "Service providers", "Warehouse managers"]
+                  }
+                ]}
+                // barWidthRatio={0.5}
+                width={400}
+                height={250}
+              />
+            </div>
+            <div className="mt-[10rem]">
+              <h3 className="font-[500] text-[1.125rem]">
+                Engagement in video and article(by roles)
+              </h3>
+              <p className="font-[500] text-brown mt-2">
+                This chart shows the number of comments and upvotes of videos
+                and articles
+              </p>
             </div>
           </Paper>
         </div>
       </div>
-      <h3 className="font-[600] text-[1.125rem] mt-6">Upload analytics</h3>
-      <div className="flex gap-4 mt-[8rem]">
-        <Paper
-          sx={{
-            p: 2,
-            borderRadius: "1rem",
-            position: "relative",
-            width: "25rem"
-          }}
-        >
-          <div className="absolute w-[90%] bg-lightGreen top-[-6rem] rounded-lg flex">
-            <BarChart
-              series={[
-                { data: [400, 200, 500], label: "Video" },
-                { data: [100, 600, 350], label: "Article" }
-              ]}
-              xAxis={[
-                {
-                  scaleType: "band",
-                  data: ["Farmers", "Service providers", "Warehouse managers"]
-                }
-              ]}
-              // barWidthRatio={0.5}
-              width={400}
-              height={250}
-            />
-          </div>
-          <div className="mt-[10rem]">
-            <h3 className="font-[500] text-[1.125rem]">
-              Video and article view count(by roles)
-            </h3>
-            <p className="font-[500] text-brown mt-2">
-              This chart shows the number of views of videos and articles by
-              different roles
-            </p>
-          </div>
-        </Paper>
-        <Paper
-          sx={{
-            p: 2,
-            borderRadius: "1rem",
-            position: "relative",
-            width: "25rem"
-          }}
-        >
-          <div className="absolute w-[90%] bg-lightGreen top-[-6rem] rounded-lg flex">
-            <LineChart
-              series={[
-                {
-                  data: [
-                    100, 200, 300, 400, 375, 180, 600, 750, 890, 1100, 1150,
-                    1200
-                  ],
-                  label: "Video"
-                },
-                {
-                  data: [
-                    200, 150, 400, 500, 350, 700, 490, 900, 1056, 760, 1130, 1300
-                  ],
-                  label: "Article"
-                }
-              ]}
-              xAxis={[
-                {
-                  scaleType: "band",
-                  data: [
-                    "January",
-                    "February",
-                    "March",
-                    "April",
-                    "May",
-                    "June",
-                    "July",
-                    "August",
-                    "September",
-                    "October",
-                    "November",
-                    "December"
-                  ]
-                }
-              ]}
-              // barWidthRatio={0.5}
-              width={400}
-              height={250}
-            />
-          </div>
-          <div className="mt-[10rem]">
-            <h3 className="font-[500] text-[1.125rem]">
-              Video and article views overview
-            </h3>
-            <p className="font-[500] text-brown mt-2">
-              This chart shows the number of views of videos and articles over
-              time
-            </p>
-          </div>
-        </Paper>
-        <Paper
-          sx={{
-            p: 2,
-            borderRadius: "1rem",
-            position: "relative",
-            width: "25rem"
-          }}
-        >
-          <div className="absolute w-[90%] bg-lightGreen top-[-6rem] rounded-lg flex">
-            <BarChart
-              series={[
-                { data: [150, 180, 400], label: "Video" },
-                { data: [110, 300, 550], label: "Article" }
-              ]}
-              xAxis={[
-                {
-                  scaleType: "band",
-                  data: ["Farmers", "Service providers", "Warehouse managers"]
-                }
-              ]}
-              // barWidthRatio={0.5}
-              width={400}
-              height={250}
-            />
-          </div>
-          <div className="mt-[10rem]">
-            <h3 className="font-[500] text-[1.125rem]">
-              Engagement in video and article(by roles)
-            </h3>
-            <p className="font-[500] text-brown mt-2">
-              This chart shows the number of comments and upvotes of videos and
-              articles
-            </p>
-          </div>
-        </Paper>
-      </div>
-      <div className="flex mt-6 gap-4">
-        <div className="w-[70%]">
+      <div className="flex flex-col sm:flex-row mt-6 gap-4">
+        <div className="sm:w-[70%]">
           <h3 className=" font-[600] text-[1.125rem]">Recent uploads</h3>
 
           <div className="mt-4 w-full">
@@ -283,7 +294,7 @@ const Dashboard = () => {
                 id="panel1a-header"
                 sx={{ display: "flex", justifyContent: "space-between" }}
               >
-                <div className="flex items-center gap-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-6">
                   <div className="flex gap-4 items-center">
                     <img src={article} className="w-6 h-6" alt="" />
                     <p className="font-[500] text-[1.125rem]">
@@ -347,7 +358,7 @@ const Dashboard = () => {
             </Accordion>
           </div>
         </div>
-        <div className="w-[30%]">
+        <div className="sm:w-[30%]">
           <h3 className="font-[600] text-[1.125rem]">Reach insight</h3>
           <Paper
             sx={{
