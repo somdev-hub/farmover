@@ -49,21 +49,11 @@ const Login = () => {
     }
   };
   return (
-    <div className="flex justify-between h-[100dvh] py-6 bg-white">
-      <div className="w-[55%] mt-3 px-[3%] h-full">
-        {/* <div className="flex justify-end">
-          <Link to={"/signup"}>
-            <p className="flex gap-1 text-[20px] items-center font-[500]">
-              Sign up
-              <span>
-                <MdOutlineLogin />
-              </span>
-            </p>
-          </Link>
-        </div> */}
-        <div className="mt-10 px-[5%] pr-[12%]">
-          <h1 className="font-[600] text-[2.5rem]">Login</h1>
-          <p className="font-[500] text-[1.25rem] mt-2">
+    <div className="flex flex-col-reverse sm:flex-row sm:justify-between sm:h-[100dvh] py-6 bg-white">
+      <div className="sm:w-[55%] sm:mt-3 sm:px-[3%] h-full">
+        <div className="mt-5 sm:mt-10 px-[5%] sm:pr-[12%]">
+          <h1 className="font-[600] text-[2.5rem] m-0">Login</h1>
+          <p className="font-[500] text-[1.125rem] sm:text-[1.25rem] mt-2">
             Enter your email and password to continue
           </p>
           <div className="mt-8 flex flex-col gap-4">
@@ -103,7 +93,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="w-[45%] h-full pr-6">
+      <div className="sm:w-[45%] h-full sm:pr-6 px-4 sm:px-0">
         <img
           src="https://envirotecmagazine.com/wp-content/uploads/2022/06/farming.jpg"
           alt=""

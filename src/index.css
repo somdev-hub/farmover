@@ -8,6 +8,66 @@ body {
   /* color: #333; */
 }
 
+.blockquote-style h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.blockquote-style h2 {
+  font-size: 1.5em;
+  margin: 0.75em 0;
+}
+
+.blockquote-style h3 {
+  font-size: 1.17em;
+  margin: 0.83em 0;
+}
+
+.blockquote-style h4 {
+  font-size: 1rem;
+  margin: 1em 0;
+}
+
+.blockquote-style h5 {
+  font-size: 0.83em;
+  margin: 1.5em 0;
+}
+
+.blockquote-style h6 {
+  font-size: 0.75em;
+  margin: 1.67em 0;
+}
+
+/* .blockquote-style p{
+  font-size: 1rem;
+  margin: 1em 0;
+  font-weight: 400;
+} */
+
+.blockquote-style h1,
+.blockquote-style h2,
+.blockquote-style h3,
+.blockquote-style h4,
+.blockquote-style h5,
+h6 {
+  font-weight: 600;
+}
+
+.blockquote-style ul {
+  list-style-type: disc;
+  padding-left: 2rem;
+}
+
+.blockquote-style ol {
+  list-style-type: decimal;
+  padding-left: 2rem;
+}
+
+.blockquote-style blockquote {
+  @apply border-l-4 border-gray-300 pl-4 italic text-gray-600;
+  /* padding-left: 1.5rem; */
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .noScrollbar::-webkit-scrollbar {
   display: none;
@@ -79,6 +139,7 @@ textarea {
 
 .description-container.expanded {
   max-height: 500px; /* Adjust this value based on the content height */
+  margin-top: 1rem;
 }
 
 .hover-effect {
@@ -87,4 +148,15 @@ textarea {
 
 .hover-effect:hover {
   background-color: rgba(128, 128, 128, 0.1); /* Faded grey effect */
+}
+
+.comment-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.comment-container.expanded {
+  max-height: 500px; /* Adjust this value based on the content height */
+  /* margin-top: 1rem; */
 }

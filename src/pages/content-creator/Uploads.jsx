@@ -1,8 +1,25 @@
 import { Paper } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getArticlesByUser, getVideosByUser } from "../../apis/api";
 
 const Uploads = () => {
   const navigate = useNavigate();
+  const [videos, setVideos] = useState([]);
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      const response = await getVideosByUser();
+      setVideos(response);
+    };
+    const fetchArticles = async () => {
+      const response = await getArticlesByUser();
+      setArticles(response);
+    };
+    fetchVideos();
+    fetchArticles();
+  }, []);
   return (
     <div className="mt-8 sm:w-[95%]">
       <Paper
@@ -15,43 +32,39 @@ const Uploads = () => {
         <div className="">
           <h3 className="font-[500] text-[1.125rem]">Uploaded videos</h3>
           <div className="mt-4 flex flex-col gap-4">
-            {Array.from({ length: 3 }).map((_, i) => {
+            {videos?.map((video, i) => {
               return (
                 <div
-                  className="sm:h-[8rem] cursor-pointer items-center flex"
+                  className="sm:h-[8rem] w-full cursor-pointer items-center flex"
                   key={i}
                 >
                   <Paper
-                    onClick={() => navigate("/content-creator/video-view")}
+                    onClick={() =>
+                      navigate("/content-creator/video-view", {
+                        state: { id: video.id }
+                      })
+                    }
                     key={i}
                     sx={{
                       p: 1,
                       borderRadius: "1rem",
                       backgroundColor: "#fff",
-                      height: "100%"
+                      height: "100%",
+                      width: "100%"
                     }}
                   >
                     <div className="flex flex-col sm:flex-row h-full items-center gap-4">
                       <img
-                        src="https://img.freepik.com/free-photo/colorful-design-with-spiral-design_188544-9588.jpg"
+                        src={video.thumbnail}
                         alt=""
                         className="sm:w-[7rem] h-full object-cover rounded-lg"
                       />
                       <div className="">
-                        <h3 className="font-[500] text-[1.25rem]">
-                          Plants 101 by Dr. Stanly Morgan. Know how to grow your
-                          crops to get the highest yield
+                        <h3 className="font-[500] text-[1.25rem] m-0">
+                          {video.title}
                         </h3>
-                        <p className="font-[500] my-1">
-                          10/10/2024 11:30:45 AM
-                        </p>
-                        <p className="text-[14px]">
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Dignissimos eius blanditiis quam beatae
-                          architecto qui, labore temporibus rerum provident,
-                          repellat, veritatis magnam eos. Nihil praesentium
-                          magni deleniti nulla alias consectetur!
-                        </p>
+                        <p className="font-[500] my-1">{video.date}</p>
+                        <p className="text-[14px]">{video.description}</p>
                       </div>
                     </div>
                   </Paper>
@@ -72,43 +85,39 @@ const Uploads = () => {
         <div className="">
           <h3 className="font-[500] text-[1.125rem]">Published articles</h3>
           <div className="mt-4 flex flex-col gap-4">
-            {Array.from({ length: 3 }).map((_, i) => {
+            {articles?.map((article, i) => {
               return (
                 <div
-                  className="flex items-center sm:h-[8rem] cursor-pointer"
+                  className="flex items-center w-full sm:h-[8rem] cursor-pointer"
                   key={i}
                 >
                   <Paper
-                    onClick={() => navigate("/content-creator/article-view")}
+                    onClick={() =>
+                      navigate("/content-creator/article-view", {
+                        state: { id: article.id }
+                      })
+                    }
                     key={i}
                     sx={{
                       p: 1,
                       borderRadius: "1rem",
                       backgroundColor: "#fff",
-                      height: "100%"
+                      height: "100%",
+                      width: "100%"
                     }}
                   >
                     <div className="flex flex-col sm:flex-row h-full items-center gap-4">
                       <img
-                        src="https://img.freepik.com/free-photo/colorful-design-with-spiral-design_188544-9588.jpg"
+                        src={article.thumbnail}
                         alt=""
                         className="sm:w-[7rem] h-full object-cover rounded-lg"
                       />
                       <div className="">
-                        <h3 className="font-[500] text-[1.25rem]">
-                          Plants 101 by Dr. Stanly Morgan. Know how to grow your
-                          crops to get the highest yield
+                        <h3 className="font-[500] text-[1.25rem] m-0">
+                          {article.title}
                         </h3>
-                        <p className="font-[500] my-1">
-                          10/10/2024 11:30:45 AM
-                        </p>
-                        <p className="text-[14px]">
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Dignissimos eius blanditiis quam beatae
-                          architecto qui, labore temporibus rerum provident,
-                          repellat, veritatis magnam eos. Nihil praesentium
-                          magni deleniti nulla alias consectetur!
-                        </p>
+                        <p className="font-[500] my-1">{article.date}</p>
+                        <p className="text-[14px]">{article.subHeading}</p>
                       </div>
                     </div>
                   </Paper>

@@ -52,6 +52,8 @@ import CreateVideo from "./pages/content-creator/CreateVideo";
 import Uploads from "./pages/content-creator/Uploads";
 import VideoView from "./pages/content-creator/VideoView";
 import ArticleView from "./pages/content-creator/ArticleView";
+import CommonVideoView from "./pages/common/VideoView";
+import CommonArticleView from "./pages/common/ArticleView";
 
 function Layout() {
   const routes = [
@@ -76,7 +78,7 @@ function Layout() {
     {
       name: "Learning",
       icon: FaBook,
-      paths: ["/learning"],
+      paths: ["/learning", "/video","/article"],
       path: "/farmer/learning"
     },
     {
@@ -86,14 +88,28 @@ function Layout() {
       path: "/farmer/calendar"
     }
   ];
+  const [activateSidebar, setActivateSidebar] = useState(false);
+
   return (
-    <div className="flex">
-      <Sidebar routes={routes} />
-      <div className=" overflow-x-scroll noScrollbar ml-[20rem] pb-4">
-        <Navbar />
-        {/* {children} */}
+    <div className="">
+      <Sidebar
+        routes={routes}
+        activateSidebar={activateSidebar}
+        setActivateSidebar={setActivateSidebar}
+      />
+      <div
+        className={`${
+          activateSidebar
+            ? "blur-[2px] h-[100dvh] overflow-hidden"
+            : "overflow-x-scroll"
+        } noScrollbar sm:ml-[20rem] pb-4 px-4 sm:px-0`}
+        onClick={() => {
+          if (activateSidebar) setActivateSidebar(false);
+          // console.log("yes");
+        }}
+      >
+        <Navbar setActivateSidebar={setActivateSidebar} />
         <Outlet />
-        {/* <Dashboard/> */}
       </div>
     </div>
   );
@@ -122,7 +138,7 @@ function WarehouseLayout() {
     {
       name: "Learning",
       icon: FaBook,
-      paths: ["/learning"],
+      paths: ["/learning", "/video","/article"],
       path: "/warehouse/learning"
     },
     {
@@ -166,7 +182,7 @@ function ServiceLayout() {
     {
       name: "Learning",
       icon: FaBook,
-      paths: ["/learning"],
+      paths: ["/learning", "/video","/article"],
       path: "/farmer/learning"
     },
     {
@@ -209,7 +225,7 @@ function CompanyLayout() {
     {
       name: "Learning",
       icon: FaBook,
-      paths: ["/learning"],
+      paths: ["/learning", "/video","/article"],
       path: "/learning"
     },
     {
@@ -253,7 +269,7 @@ const ContentCreaterLayout = () => {
     {
       name: "Learning",
       icon: FaBook,
-      paths: ["/learning"],
+      paths: ["/learning", "/video","/article"],
       path: "/learning"
     },
     {
@@ -327,6 +343,7 @@ function App() {
       <Provider store={store}>
         <Routes>
           <Route path="/" element={<RoleRedirect />} />
+          {/* -----------------FARMER SECTION ----------------------- */}
           <Route path="/farmer" element={<Layout />}>
             <Route index path="/farmer/home" element={<FarmerDashboard />} />
             <Route path="/farmer/add-production" element={<AddProduction />} />
@@ -338,9 +355,12 @@ function App() {
             <Route path="/farmer/services" element={<Services />} />
             <Route path="/farmer/learning" element={<Learning />} />
             <Route path="/farmer/calendar" element={<Calendar />} />
+            <Route path="/farmer/video" element={<CommonVideoView />} />
+            <Route path="/farmer/article" element={<CommonArticleView />} />
             <Route path="/farmer/warehouse/view" element={<WarehouseView />} />
             <Route path="/farmer/services/view" element={<ServiceView />} />
           </Route>
+          {/* -----------------WAREHOUSE SECTION ----------------------- */}
           <Route path="/warehouse" element={<WarehouseLayout />}>
             <Route path="/warehouse/home" element={<WarehouseDashboard />} />
             <Route path="/warehouse/storage" element={<Storage />} />
@@ -351,7 +371,10 @@ function App() {
             />
             <Route path="/warehouse/learning" element={<Learning />} />
             <Route path="/warehouse/calendar" element={<Calendar />} />
+            <Route path="/warehouse/video" element={<CommonVideoView />} />
+            <Route path="/warehouse/article" element={<CommonArticleView />} />
           </Route>
+          {/* -----------------SERVICE SECTION ----------------------- */}
           <Route path="/service" element={<ServiceLayout />}>
             <Route path="/service/home" element={<Dashboard />} />
             <Route path="/service/add-service" element={<AddService />} />
@@ -363,7 +386,10 @@ function App() {
             <Route path="/service/contracts" element={<Contracts />} />
             <Route path="/service/calendar" element={<Calendar />} />
             <Route path="/service/learning" element={<Learning />} />
+            <Route path="/service/video" element={<CommonVideoView />} />
+            <Route path="/service/article" element={<CommonArticleView />} />
           </Route>
+          {/* -----------------CONTENT CREATOR SECTION ----------------------- */}
           <Route path="/content-creator" element={<ContentCreaterLayout />}>
             <Route
               path="/content-creator/home"
@@ -387,14 +413,19 @@ function App() {
             <Route path="/content-creator/calendar" element={<Calendar />} />
             <Route path="/content-creator/learning" element={<Learning />} />
           </Route>
+          {/* -----------------COMPANY SECTION ----------------------- */}
           <Route path="/company" element={<CompanyLayout />}>
             <Route path="/company/home" element={<CompanyDashboard />} />
             <Route path="/company/marketplace" element={<Marketplace />} />
             <Route path="/company/purchases" element={<Purchases />} />
             <Route path="/company/warehouse" element={<VisitWarehouse />} />
             <Route path="/company/learning" element={<Learning />} />
+            <Route path="/company/video" element={<CommonVideoView />} />
+            <Route path="/company/article" element={<CommonArticleView />} />
             <Route path="/company/calendar" element={<Calendar />} />
           </Route>
+
+          {/* -----------------COMMONS SECTION ----------------------- */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/set-password" element={<SetPassword />} />
           <Route path="/login" element={<Login />} />

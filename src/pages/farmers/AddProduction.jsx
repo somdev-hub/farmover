@@ -75,7 +75,7 @@ const AddProduction = () => {
     fetchAvailableServices();
   }, []);
   return (
-    <div className="flex gap-4 mt-8 w-[75vw]">
+    <div className="flex flex-col sm:flex-row gap-4 mt-8 sm:w-[75vw]">
       <div className="flex-1 bg-white shadow-md rounded-[1rem] px-4 py-4">
         <div className="">
           <h3 className="font-[600] text-[24px]">Add new production</h3>
@@ -121,8 +121,8 @@ const AddProduction = () => {
 
                 return (
                   <div className="" key={i}>
-                    <div className="flex gap-3  pb-3 w-full justify-between">
-                      <div className="flex gap-4 items-center">
+                    <div className="flex flex-row gap-3  pb-3 w-full justify-between">
+                      <div className="flex flex-row gap-4 items-center">
                         <img
                           src={serviceDetails.serviceImage}
                           className="h-[4.5rem] object-cover w-[4.5rem] rounded-xl"
@@ -132,7 +132,7 @@ const AddProduction = () => {
                           <h4 className="text-[1.125rem] font-[600]">
                             {serviceDetails.serviceName}
                           </h4>
-                          <div className="flex justify-between gap-6">
+                          <div className="flex flex-col sm:flex-row justify-between sm:gap-6">
                             <p className="text-[14px] font-[500] text-brown">
                               {serviceDetails.serviceType}
                             </p>
@@ -220,7 +220,7 @@ const AddProduction = () => {
                   <h4 className="text-[1.125rem] font-[600]">
                     {service.serviceName}
                   </h4>
-                  <div className="flex justify-between gap-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:gap-6">
                     <p className="text-[14px] font-[500] text-brown">
                       {service.serviceType}
                     </p>
@@ -235,8 +235,10 @@ const AddProduction = () => {
                 </div>
               </div>
 
-              {productionData.services.includes(service.id) ? (
-                <div className="flex justify-center items-center">
+              {productionData?.services?.some(
+                (serviceObj) => serviceObj.service_id === service.id
+              ) ? (
+                <div className=" hidden sm:flex justify-center items-center">
                   <p className="text-brown">selected</p>
                 </div>
               ) : (

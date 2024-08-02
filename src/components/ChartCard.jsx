@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 const ChartCard = ({ options, title, subtitle, desc }) => {
   return (
-    <div className="px-6 w-[25rem] py-4 rounded-[1rem] bg-white shadow-md relative h-[17rem] flex flex-col justify-end items-center">
+    <div className="px-6 sm:w-[25rem] py-4 rounded-[1rem] bg-white shadow-md relative h-[17rem] flex flex-col justify-end items-center">
       <div className="absolute  w-[90%] bg-lightGreen rounded-[1rem] pt-2 h-[15rem] top-[-7rem] flex items-center justify-center">
         <HighchartsReact highcharts={Highcharts} options={options} />
       </div>

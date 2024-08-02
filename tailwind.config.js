@@ -18,9 +18,15 @@ export default {
         "::-webkit-scrollbar": {
           display: "none"
         }
+      },
+      fontSize: {
+        h1: "2.25rem", // 36px
+        h2: "1.875rem", // 30px
+        h3: "1.5rem", // 24px
+        h4: "1.25rem", // 20px
+        h5: "1rem" // 16px
       }
-    },
-    
+    }
   },
   plugins: [
     // require('daisyui'),

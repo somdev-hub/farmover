@@ -7,7 +7,7 @@ const Editor = ({ data, setData }) => {
 
   const handleChange = (content, delta, source, editor) => {
     setValue(content);
-    setData(editor.getContents());
+    setData(content);
   };
 
   const modules = {

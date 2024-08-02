@@ -83,7 +83,7 @@ const CalendarPage = () => {
   return (
     <div>
       <div className="mt-10">
-        <Paper className="p-5">
+        <Paper className="p-1 sm:p-5">
           {/* <h1 className="text-2xl font-bold">Calendar</h1> */}
           <Calendar
             localizer={localizer}

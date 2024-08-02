@@ -9,7 +9,7 @@ const Sidebar = ({ routes, activateSidebar, setActivateSidebar }) => {
 
   return (
     <div
-      className={`h-[100dvh] items-center fixed sm:left-0 ${
+      className={`h-[100dvh] items-center fixed sm:left-0  ${
         activateSidebar ? "left-0" : "-left-full"
       } transition-all duration-300 sm:flex z-50`}
     >
@@ -21,7 +21,7 @@ const Sidebar = ({ routes, activateSidebar, setActivateSidebar }) => {
             </h2>
             <hr className="mt-4" />
           </div>
-          <ul className="mt-8">
+          <ul className="mt-8 list-none pl-0">
             {routes?.map((route, index) => {
               return (
                 <li

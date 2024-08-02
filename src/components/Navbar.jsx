@@ -82,6 +82,14 @@ const Navbar = ({ setActivateSidebar }) => {
     {
       path: "/article-view",
       text: "Your Article"
+    },
+    {
+      path: "/video",
+      text: "Video"
+    },
+    {
+      path: "/article",
+      text: "Article"
     }
   ];
   return (

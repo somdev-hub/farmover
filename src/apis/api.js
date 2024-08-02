@@ -720,3 +720,320 @@ export const getWarehouseRevenueFromSalesChartData = async () => {
     console.log(error);
   }
 };
+
+export const addVideo = async (data) => {
+  const formData = new FormData();
+  formData.append("title", data.title);
+  formData.append("video", data.video);
+  formData.append("tags", JSON.stringify(data.tags));
+  formData.append("longDescription", data.longDescription);
+  formData.append("description", data.description);
+  formData.append("thumbnail", data.thumbnail);
+
+  try {
+    const response = await axios.post(
+      `${ADDRESS}/videos/?ownerEmail=${email}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addArticle = async (data) => {
+  const formData = new FormData();
+  formData.append("title", data.title);
+  formData.append("tags", JSON.stringify(data.tags));
+  formData.append("subHeading", data.subHeading);
+  formData.append("thumbnail", data.thumbnail);
+  formData.append("content", JSON.stringify(data.content));
+
+  try {
+    const response = await axios.post(
+      `${ADDRESS}/articles/?ownerEmail=${email}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getVideosByUser = async () => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/videos/get-by-email?ownerEmail=${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getArticlesByUser = async () => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/articles/get-by-email?ownerEmail=${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getVideoById = async (id) => {
+  try {
+    const response = await axios.get(`${ADDRESS}/videos/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getVideoComments = async (id, page, size) => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/videos/comments/${id}?page=${page}&size=${size}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getArticleById = async (id) => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/articles/${id}?email=${email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getVideosForUsers = async (page, size) => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/videos/?page=${page}&size=${size}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getArticlesForUsers = async (page, size) => {
+  try {
+    const response = await axios.get(
+      `${ADDRESS}/articles/?page=${page}&size=${size}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addViewToVideo = async (id) => {
+  try {
+    const response = await axios.put(
+      `${ADDRESS}/videos/view/${id}?email=${email}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const toggleUpVoteVideo = async (id) => {
+  try {
+    const response = await axios.put(
+      `${ADDRESS}/videos/upvote/${id}?email=${email}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const toggleDownVoteVideo = async (id) => {
+  try {
+    const response = await axios.put(
+      `${ADDRESS}/videos/downvote/${id}?email=${email}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addCommentToVideo = async (id, comment) => {
+  try {
+    const response = await axios.post(
+      `${ADDRESS}/videos/comment/${id}/`,
+      {
+        comment: comment,
+        email: email
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addViewToArticle = async (id) => {
+  try {
+    const response = await axios.put(
+      `${ADDRESS}/articles/view/${id}?email=${email}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const toggleUpVoteArticle = async (id) => {
+  try {
+    const response = await axios.put(
+      `${ADDRESS}/articles/upvote/${id}?email=${email}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const toggleDownVoteArticle = async (id) => {
+  try {
+    const response = await axios.put(
+      `${ADDRESS}/articles/downvote/${id}?email=${email}`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addCommentToArticle = async (id, comment) => {
+  try {
+    const response = await axios.post(
+      `${ADDRESS}/articles/comment/${id}`,
+      {
+        comment: comment,
+        email: email
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};

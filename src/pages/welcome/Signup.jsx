@@ -78,13 +78,15 @@ const Signup = () => {
                   "Farmer",
                   "Warehouse manager",
                   "Service provider",
-                  "Company"
+                  "Company",
+                  "Content Creator"
                 ]}
                 values={[
                   "FARMER",
                   "WAREHOUSE_MANAGER",
                   "SERVICE_PROVIDER",
-                  "COMPANY"
+                  "COMPANY",
+                  "CONTENT_CREATOR"
                 ]}
                 name="role"
                 value={signupData.role}

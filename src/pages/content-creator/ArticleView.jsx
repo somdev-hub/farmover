@@ -1,7 +1,39 @@
 import { Paper } from "@mui/material";
+import { useEffect, useState } from "react";
 import { MdDelete, MdOutlineUnpublished, MdUpdate } from "react-icons/md";
+import { useLocation } from "react-router-dom";
+import { getArticleById } from "../../apis/api";
+import DOMPurify from "dompurify";
+import parse from "html-react-parser";
+import axios from "axios";
 
 const ArticleView = () => {
+  const location = useLocation();
+  const { id } = location.state;
+  const [article, setArticle] = useState({});
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    const fetchArticle = async () => {
+      const response = await getArticleById(id);
+      setArticle(response);
+      const content = response?.content || "";
+
+      try {
+        const contentText = await axios.get(content);
+        console.log(contentText);
+        setContent(contentText.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchArticle();
+  }, [id]);
+  // let content = article?.content || "";
+  // if (content.startsWith('"') && content.endsWith('"')) {
+  //   content = content.slice(1, -1);
+  // }
+  // const sanitizedContent = DOMPurify.sanitize(content);
   return (
     <div className="mt-8 sm:w-[98%]">
       <div className="w-full flex flex-col sm:flex-row gap-4">
@@ -14,7 +46,7 @@ const ArticleView = () => {
           >
             <div className="w-full">
               <img
-                src="https://img.freepik.com/free-photo/colorful-design-with-spiral-design_188544-9588.jpg"
+                src={article?.thumbnail}
                 alt=""
                 className="w-full sm:h-[20rem] object-cover rounded-lg"
               />
@@ -22,33 +54,14 @@ const ArticleView = () => {
                 <p className="font-[500] text-blue-400 my-3">
                   #agriculture, #farming, #gardening, #principles, #crops
                 </p>
-                <h2 className="font-[500] text-[1.75rem]">
-                  How to excel in agriculture with Dr. Stanley Morgan.
-                  Discussion about basic farming techniques
-                </h2>
+                <h2 className="font-[500] text-[1.75rem]">{article?.title}</h2>
                 <div className=" border-l-4 border-blue-500 pl-4 mt-4 py-2">
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Aspernatur cupiditate minima accusamus qui possimus illum,
-                    impedit, nemo ea animi nesciunt ad obcaecati optio, quod
-                    quasi dolor repellendus hic harum omnis?
-                  </p>
+                  <p>{article?.subHeading}</p>
                 </div>
               </div>
-              <div className="mt-4 w-full">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quos
-                blanditiis repellat facilis delectus quisquam, quo magni
-                voluptatibus impedit dicta, quis obcaecati numquam! Magni
-                aliquam enim animi illo adipisci veritatis eligendi similique in
-                sequi, quae repellendus reiciendis fugit rerum, dicta molestias
-                atque nulla, minima asperiores sunt. Blanditiis aliquid
-                asperiores cumque quod ab perferendis sint architecto qui. Non,
-                iure exercitationem incidunt doloremque, nostrum ipsam suscipit
-                quia accusantium dolores quis dolorum quasi veniam velit sunt
-                necessitatibus aut dicta. Modi dicta architecto a totam sint
-                voluptas nulla provident nobis, repellendus animi possimus
-                mollitia harum consequuntur culpa beatae, dolor commodi tenetur
-                velit iure molestiae at.
+              <div className="mt-4 w-full list-disc prose blockquote-style">
+                {/* <div dangerouslySetInnerHTML={{__html:content}}></div> */}
+                {parse(content)}
               </div>
             </div>
           </Paper>
@@ -103,6 +116,36 @@ const ArticleView = () => {
               <MdDelete className="text-2xl" />
               Delete article
             </Paper>
+          </div>
+          <div className="mt-4">
+            <h3 className="font-[500] text-[1.125rem]">Comments</h3>
+            <div className="mt-4">
+              <Paper
+                sx={{
+                  px: 2,
+                  py: 1.5,
+                  borderRadius: "1rem",
+                  // display: "flex",
+                  gap: "0.5rem",
+                  width: "100%"
+                }}
+              >
+                <div className="flex gap-3 items-center mb-2">
+                  <div className="w-[2rem] h-[2rem] rounded-full bg-brown"></div>
+                  <h3 className="font-[600] text-base m-0">Ramesh Mehta</h3>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  {/* <p className="font-[500] text-brown">Farmer</p> */}
+                  <p className="text-[14px]">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                    etiam, ut ait Scaevola, in ipsa repulsione consuetudinis vis
+                    est ad laborem leniendum.
+                  </p>
+                </div>
+              </Paper>
+              -
+            </div>
           </div>
         </div>
       </div>

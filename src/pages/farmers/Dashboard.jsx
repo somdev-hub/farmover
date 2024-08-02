@@ -19,6 +19,7 @@ import {
 } from "../../apis/api";
 import { FaMinus } from "react-icons/fa6";
 import { crops } from "../../assets/crops";
+import { Paper } from "@mui/material";
 
 const Dashboard = () => {
   const [productionCard, setProductioCard] = useState([]);
@@ -190,55 +191,75 @@ const Dashboard = () => {
     fetchOrderOverview();
   }, []);
   return (
-    <div className="mt-8 w-[98%]">
+    <div className="mt-8 sm:w-[98%]">
       <div className="">
-        <div className="overflow-x-scroll flex gap-4 py-4">
-          <div className="w-fit min-w-[16rem]">
+        <h3 className="font-[500] text-[1.125rem]">Production insights</h3>
+        <div className="overflow-x-scroll flex flex-col sm:flex-row gap-4 py-4">
+          <div className="w-fit min-w-full sm:min-w-[14rem] flex flex-col gap-2">
             <Link to="/farmer/add-production">
-              <div className="px-8 py-4 rounded-[1rem] bg-white shadow-md  flex gap-4">
-                <div className="bg-darkNavy rounded-full p-4 box-border">
-                  <FaPlus className="text-white text-[1.2rem] box-border" />
+              <Paper
+                sx={{
+                  p: 2,
+                  borderRadius: "1rem"
+                }}
+              >
+                <div className="flex gap-4 items-center">
+                  <div className="bg-darkNavy rounded-full p-4 box-border">
+                    <FaPlus className="text-white  box-border" />
+                  </div>
+                  <p className="font-[500] text-[1.125rem]">
+                    Add <br className="hidden sm:block" /> production
+                  </p>
                 </div>
-                <p className="font-[500] text-[1.125rem]">
-                  Add <br /> production
-                </p>
-              </div>
+              </Paper>
             </Link>
             <Link to="/farmer/production-history">
-              <div className="px-8 py-4 rounded-[1rem] bg-white shadow-md  flex gap-4 mt-4">
-                <div className="bg-darkNavy rounded-full p-4 box-border">
-                  <FaKey className="text-white text-[1.2rem] box-border" />
+              <Paper
+                sx={{
+                  p: 2,
+                  borderRadius: "1rem"
+                }}
+              >
+                <div className="flex gap-4 items-center">
+                  <div className="bg-darkNavy rounded-full p-4 box-border">
+                    <FaKey className="text-white  box-border" />
+                  </div>
+                  <p className="font-[500] text-[1.125rem]">
+                    Token based <br className="hidden sm:block" /> tracking
+                  </p>
                 </div>
-                <p className="font-[500] text-[1.125rem]">
-                  Token based <br /> tracking
-                </p>
-              </div>
+              </Paper>
             </Link>
           </div>
           {productionCard?.map((key, index) => (
-            <div
-              className="px-6 w-[17rem] py-4 rounded-[1rem] bg-white shadow-md flex flex-col min-w-[18rem]"
+            <Paper
+              sx={{
+                p: 2,
+                borderRadius: "1rem"
+              }}
               key={index}
             >
-              <div className="flex justify-between ">
-                <img
-                  src="https://media.istockphoto.com/id/522691403/photo/close-up-peddy-rice-in-a-field.jpg?s=612x612&w=0&k=20&c=OV5Srt6zPWG8J6QpfQk6pTV242GGlVY5l-VoGdU9uyc="
-                  alt=""
-                  className="w-[4rem] h-[4rem] rounded-[1rem] object-cover inline-block shadow-md"
-                />
-                <div className="">
-                  <p className="font-bold text-[1.7rem]">
-                    {key?.productionQuantity}
+              <div className=" flex flex-col min-w-[14rem]" key={index}>
+                <div className="flex justify-between ">
+                  <img
+                    src="https://media.istockphoto.com/id/522691403/photo/close-up-peddy-rice-in-a-field.jpg?s=612x612&w=0&k=20&c=OV5Srt6zPWG8J6QpfQk6pTV242GGlVY5l-VoGdU9uyc="
+                    alt=""
+                    className="w-[4rem] h-[4rem] rounded-[1rem] object-cover inline-block shadow-md"
+                  />
+                  <div className="">
+                    <p className="font-bold text-[1.7rem]">
+                      {key?.productionQuantity}
+                    </p>
+                    <p className="font-[500] text-[20px]">Quintals</p>
+                  </div>
+                </div>
+                <div className="border-t-2 border-grey mt-3 pt-4 border-solid">
+                  <p className="text-[18px] text-grey">
+                    {key?.cropName} production
                   </p>
-                  <p className="font-[500] text-[20px]">Quintals</p>
                 </div>
               </div>
-              <div className="border-t-2 border-grey mt-8 pt-4 border-solid">
-                <p className="text-[18px] text-grey">
-                  {key?.cropName} production
-                </p>
-              </div>
-            </div>
+            </Paper>
           ))}
           {/* <div className="px-6 w-[17rem] py-4 rounded-[1rem] bg-white shadow-md flex flex-col ">
           <div className="flex justify-between ">
@@ -274,31 +295,39 @@ const Dashboard = () => {
         </div> */}
         </div>
       </div>
-      <div className="flex gap-4 mt-[10rem]">
-        <ChartCard
-          options={totalProductionOptions}
-          title="Total production"
-          subtitle="data since last month"
-          desc={`${
-            productionData &&
-            Object.values(productionData)?.reduce((a, b) => a + b, 0)
-          } kilograms of total productions`}
-        />
-        <ChartCard
-          options={totalRevenueOptions}
-          title="Total revenue"
-          subtitle="data since last year"
-          desc="5% increase in total revenue"
-        />
-        <ChartCard
-          options={totalExpenseOptions}
-          title="Total expenditure"
-          subtitle="data since last year"
-          desc="10% decrease in total expenditure"
-        />
+      <h3 className="font-[500] text-[1.125rem] mt-4">Production analytics</h3>
+
+      <div className="flex flex-col sm:flex-row gap-4 mt-[9rem]">
+        <div className="">
+          <ChartCard
+            options={totalProductionOptions}
+            title="Total production"
+            subtitle="data since last month"
+            desc={`${
+              productionData &&
+              Object.values(productionData)?.reduce((a, b) => a + b, 0)
+            } kilograms of total productions`}
+          />
+        </div>
+        <div className="sm:mt-0 mt-[8rem]">
+          <ChartCard
+            options={totalRevenueOptions}
+            title="Total revenue"
+            subtitle="data since last year"
+            desc="5% increase in total revenue"
+          />
+        </div>
+        <div className="sm:mt-0 mt-[8rem]">
+          <ChartCard
+            options={totalExpenseOptions}
+            title="Total expenditure"
+            subtitle="data since last year"
+            desc="10% decrease in total expenditure"
+          />
+        </div>
       </div>
-      <div className="flex gap-4 mt-8">
-        <div className="px-6  py-4 rounded-[1rem] bg-white shadow-md flex-1">
+      <div className="flex flex-col sm:flex-row gap-4 mt-8">
+        <div className="px-6  py-4 rounded-[1rem] bg-white shadow-md sm:flex-1">
           <div className="">
             <div className="">
               <h3 className="text-[24px] font-[600]">Total sales</h3>
@@ -407,7 +436,7 @@ const Dashboard = () => {
             </Table>
           </TableContainer>
         </div>
-        <div className="px-6 py-4 rounded-[1rem] bg-white shadow-md w-[35%]">
+        <div className="px-6 py-4 rounded-[1rem] bg-white shadow-md sm:w-[35%]">
           <div className="">
             <div className="">
               <h3 className="text-[24px] font-[600]">Order overview</h3>

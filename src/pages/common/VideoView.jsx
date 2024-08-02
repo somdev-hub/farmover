@@ -1,31 +1,56 @@
-import { Paper } from "@mui/material";
-import sample_video from "../../assets/sample_video.mp4";
+import { Button, Pagination, Paper, TextField, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-import { MdDelete, MdOutlineUnpublished, MdUpdate } from "react-icons/md";
 import { useLocation } from "react-router-dom";
-import { getVideoById, getVideoComments } from "../../apis/api";
+import {
+  addCommentToVideo,
+  addViewToVideo,
+  getVideoById,
+  getVideoComments,
+  toggleDownVoteVideo,
+  toggleUpVoteVideo
+} from "../../apis/api";
 import { BiDownvote, BiUpvote } from "react-icons/bi";
 import { RiExpandUpDownLine } from "react-icons/ri";
 
 const VideoView = () => {
   const [expandDesc, setExpandDesc] = useState(false);
   const [expandComments, setExpandComments] = useState(false);
+  const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [commentPagination, setCommentPagination] = useState({
+    current: 0,
+    total: 0
+  });
   const location = useLocation();
   const { id } = location.state;
   const [video, setVideo] = useState({});
 
+  const upvoteHandler = async (e) => {
+    e.preventDefault();
+    const response = await toggleUpVoteVideo(id);
+    console.log(response.data);
+  };
+
+  const fetchComments = async (id, page, size) => {
+    const response = await getVideoComments(id, page, size);
+    setComments(response.content);
+    setCommentPagination({
+      current: response.number,
+      total: response.totalPages
+    });
+  };
   useEffect(() => {
     const fetchVideo = async () => {
       const response = await getVideoById(id);
       setVideo(response);
     };
-    const fetchComments = async () => {
-      const response = await getVideoComments(id);
-      setComments(response);
+    const addView = async () => {
+      const response = await addViewToVideo(id);
+      console.log(response.status);
     };
     fetchVideo();
-    fetchComments();
+    fetchComments(id, 0, 10);
+    addView();
   }, [id]);
   return (
     <div className="mt-8 gap-4 sm:w-[98%]">
@@ -78,27 +103,7 @@ const VideoView = () => {
               >
                 <p>{video?.longDescription}</p>
               </div>
-              {/* <div className="mt-0">
-                <div className="">
-                  <Paper
-                    sx={{
-                      p: 2,
-                      backgroundColor: "#EEF7FF",
-                      display: "flex",
-                      width: "fit-content"
-                    }}
-                  >
-                    <div className="flex gap-4 items-center font-[600] mr-4 ">
-                      <BiUpvote className="text-lg" />
-                      125
-                    </div>
-                    <div className="flex gap-4 items-center font-[600]">
-                      <BiDownvote className="text-lg" />
-                      125
-                    </div>
-                  </Paper>
-                </div>
-              </div> */}
+
               <div className="mt-4">
                 <div className="flex items-center justify-between pr-4 border-y-2 border-solid py-3">
                   <div className="flex items-center gap-2">
@@ -117,114 +122,106 @@ const VideoView = () => {
                     </p>
                   </div>
                   <div className="flex">
-                    <div className="flex gap-4 items-center font-[600] mr-2 ">
-                      <BiUpvote className="text-lg" />
-                      {video?.upCount}
-                    </div>
-                    <div className="flex gap-2 items-center font-[600]">
-                      <BiDownvote className="text-lg" />
-                      {video?.downCount}
-                    </div>
+                    <Tooltip title="Upvote" placement="bottom">
+                      <div
+                        className="flex gap-4 items-center font-[600] mr-2 hover-effect p-2 cursor-pointer"
+                        onClick={upvoteHandler}
+                      >
+                        <BiUpvote className="text-lg" />
+                        {video?.upCount}
+                      </div>
+                    </Tooltip>
+                    <Tooltip title="Downvote" placement="bottom">
+                      <div
+                        className="flex gap-2 items-center font-[600] hover-effect p-2 cursor-pointer"
+                        onClick={async () => {
+                          const response = await toggleDownVoteVideo(id);
+                          console.log(response.data);
+                        }}
+                      >
+                        <BiDownvote className="text-lg" />
+                        {video?.downCount}
+                      </div>
+                    </Tooltip>
                   </div>
                 </div>
               </div>
               <div className="mt-4">
                 <div className="flex justify-between items-center">
                   <h3 className="font-[500] text-[1.125rem]">Comments</h3>
-                  <RiExpandUpDownLine
-                    className="font-[500] text-xl cursor-pointer"
-                    onClick={() => {
-                      setExpandComments(!expandComments);
-                    }}
+                  <Tooltip title="Expand" placement="bottom">
+                    <div className="hover-effect">
+                      <RiExpandUpDownLine
+                        className="font-[500] text-xl cursor-pointer"
+                        onClick={() => {
+                          setExpandComments(!expandComments);
+                        }}
+                      />
+                    </div>
+                  </Tooltip>
+                </div>
+
+                <div className="mt-4 flex gap-2">
+                  <TextField
+                    onChange={(e) => setComment(e.target.value)}
+                    value={comment}
+                    variant="outlined"
+                    label="Write a comment"
+                    fullWidth
                   />
+                  <Button
+                    onClick={async () => {
+                      const response = await addCommentToVideo(id, comment);
+                      console.log(response.data);
+                      setComment("");
+                    }}
+                  >
+                    Post
+                  </Button>
                 </div>
                 <div
-                  className={`mt-6 flex flex-col gap-4 comment-container ${
+                  className={`mt-6 flex flex-col gap-4 comment-container w-full ${
                     expandComments ? "expanded" : "contracted"
                   }`}
                 >
-                  {Array.from({ length: 10 }).map((_, i) => {
+                  {comments?.map((comment, i) => {
                     return (
-                      <div key={i} className="flex gap-3 items-start ">
+                      <div key={i} className="flex gap-3 items-start w-full">
                         <img
-                          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-erUOQght_VvS9h9OS_0J6wvFFIQHtIRgGjv-e1RBZ3fP02XlcM59WPkFb9cN-0U2uik&usqp=CAU"
+                          src={
+                            comment.profileImage
+                              ? comment.profileImage
+                              : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-erUOQght_VvS9h9OS_0J6wvFFIQHtIRgGjv-e1RBZ3fP02XlcM59WPkFb9cN-0U2uik&usqp=CAU"
+                          }
                           alt=""
                           className="w-8 h-8 rounded-full mt-1"
                         />
-                        <div className="border-b-2 border-solid pb-2">
+                        <div className="border-b-2 border-solid pb-2 w-full">
                           <div className="flex justify-between">
-                            <p className="font-[500] ">Ramesh Mehta</p>
-                            <p className="text-[14px]">10/10/2014 11:55am</p>
+                            <p className="font-[500] ">{comment.name}</p>
+                            <p className="text-[14px]">{comment.date}</p>
                           </div>
-                          <p className=" ">
-                            Lorem ipsum dolor, sit amet consectetur adipisicing
-                            elit. Laboriosam, sint. Enim, voluptas. Ipsa,
-                            voluptate corrupti.
-                          </p>
+                          <p className=" ">{comment.comment}</p>
                         </div>
                       </div>
                     );
                   })}
+                  <div className="flex items-center justify-center my-2">
+                    <Pagination
+                      count={commentPagination.total}
+                      page={commentPagination.current + 1}
+                      onChange={(_, page) => {
+                        fetchComments(id, page - 1, 10);
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </Paper>
         </div>
         <div className="sm:w-[35%]">
-          <h3 className="font-[500] text-[1.125rem]">Actions</h3>
-
-          <div className="mt-4 w-full">
-            <Paper
-              sx={{
-                p: 2,
-                borderRadius: "1rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                fontWeight: "600",
-                cursor: "pointer",
-                width: "100%"
-              }}
-            >
-              <MdOutlineUnpublished className="text-2xl" />
-              Unpublish video
-            </Paper>
-            <Paper
-              sx={{
-                p: 2,
-                borderRadius: "1rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                fontWeight: "600",
-                cursor: "pointer",
-                width: "100%",
-                marginTop: "0.75rem"
-              }}
-            >
-              <MdUpdate className="text-2xl" />
-              Update video
-            </Paper>
-            <Paper
-              sx={{
-                p: 2,
-                borderRadius: "1rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                fontWeight: "600",
-                cursor: "pointer",
-                width: "100%",
-                marginTop: "0.75rem"
-              }}
-            >
-              <MdDelete className="text-2xl" />
-              Delete video
-            </Paper>
-          </div>
-          <h3 className="font-[500] text-[1.125rem] mt-6">
-            More of your videos
-          </h3>
+          <h3 className="font-[500] text-[1.125rem] ">More of your videos</h3>
           <div className="mt-4 flex flex-col gap-2">
             {Array.from({ length: 3 }).map((_, i) => {
               return (

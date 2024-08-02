@@ -43,6 +43,9 @@ const SetPassword = () => {
         case "COMPANY":
           navigate("/company-info-add");
           break;
+        case "CONTENT_CREATOR":
+          navigate("/content-creator/home");
+          break;
         default:
           navigate("/login");
           break;
