@@ -34,16 +34,18 @@ const Warehouse = () => {
           </div>
         </div>
         <div className="flex gap-6 mt-6 ">
-          {warehouses?.map((item, i) => (
-            <WarehouseCard
-              key={i}
-              id={item.id}
-              image={item.warehouseImage}
-              name={item.name}
-              address={item.address}
-              storages={item.storages}
-            />
-          ))}
+          {warehouses
+            ?.filter((item) => item.ownership === "GOVERNMENT_OWNED")
+            .map((item, i) => (
+              <WarehouseCard
+                key={i}
+                id={item.id}
+                image={item.warehouseImage}
+                name={item.name}
+                address={item.address}
+                storages={item.storages}
+              />
+            ))}
         </div>
       </div>
       <div className="mt-8">
@@ -61,10 +63,17 @@ const Warehouse = () => {
           </div>
         </div>
         <div className="flex gap-6 mt-6 ">
-          {Array(3)
-            .fill()
-            .map((_, i) => (
-              <WarehouseCard key={i} />
+          {warehouses
+            ?.filter((item) => item.ownership === "PRIVATE_OWNED")
+            .map((item, i) => (
+              <WarehouseCard
+                key={i}
+                id={item.id}
+                image={item.warehouseImage}
+                name={item.name}
+                address={item.address}
+                storages={item.storages}
+              />
             ))}
         </div>
       </div>

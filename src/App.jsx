@@ -78,7 +78,7 @@ function Layout() {
     {
       name: "Learning",
       icon: FaBook,
-      paths: ["/learning", "/video","/article"],
+      paths: ["/learning", "/video", "/article"],
       path: "/farmer/learning"
     },
     {
@@ -138,7 +138,7 @@ function WarehouseLayout() {
     {
       name: "Learning",
       icon: FaBook,
-      paths: ["/learning", "/video","/article"],
+      paths: ["/learning", "/video", "/article"],
       path: "/warehouse/learning"
     },
     {
@@ -149,7 +149,7 @@ function WarehouseLayout() {
     }
   ];
   return (
-    <div className="flex">
+    <div className="">
       <Sidebar routes={routes} />
       <div className=" overflow-x-scroll noScrollbar ml-[20rem] pb-4">
         <Navbar />
@@ -182,7 +182,7 @@ function ServiceLayout() {
     {
       name: "Learning",
       icon: FaBook,
-      paths: ["/learning", "/video","/article"],
+      paths: ["/learning", "/video", "/article"],
       path: "/farmer/learning"
     },
     {
@@ -225,7 +225,7 @@ function CompanyLayout() {
     {
       name: "Learning",
       icon: FaBook,
-      paths: ["/learning", "/video","/article"],
+      paths: ["/learning", "/video", "/article"],
       path: "/learning"
     },
     {
@@ -260,23 +260,18 @@ const ContentCreaterLayout = () => {
       paths: ["/uploads", "/video-view", "/article-view"],
       path: "/content-creator/uploads"
     },
-    {
-      name: "Purchases",
-      icon: MdOutlineAttachMoney,
-      paths: ["/purchases"],
-      path: "/company/purchases"
-    },
+
     {
       name: "Learning",
       icon: FaBook,
-      paths: ["/learning", "/video","/article"],
-      path: "/learning"
+      paths: ["/learning", "/video", "/article"],
+      path: "/content-creator/learning"
     },
     {
       name: "Calendar",
       icon: FaRegCalendar,
       paths: ["/calendar"],
-      path: "/calendar"
+      path: "/content-creator/calendar"
     }
   ];
   const [activateSidebar, setActivateSidebar] = useState(false);

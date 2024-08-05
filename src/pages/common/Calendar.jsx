@@ -11,63 +11,12 @@ const localizer = momentLocalizer(moment);
 const CalendarPage = () => {
   const [calendarEvents, setCalendarEvents] = useState([]);
 
-  const events = [
-    {
-      title: "Spring Planting Kickoff",
-      start: new Date(2024, 3, 1),
-      end: new Date(2024, 3, 4)
-    },
-    {
-      title: "Organic Fertilization Methods",
-      start: new Date(2024, 3, 8),
-      end: new Date(2024, 3, 11)
-    },
-    {
-      title: "Integrated Pest Management Workshop",
-      start: new Date(2024, 3, 15),
-      end: new Date(2024, 3, 18)
-    },
-    {
-      title: "High-Yield Crop Varieties Seminar",
-      start: new Date(2024, 3, 22),
-      end: new Date(2024, 3, 25)
-    },
-    {
-      title: "Sustainable Farming Practices Conference",
-      start: new Date(2024, 4, 1),
-      end: new Date(2024, 4, 4)
-    },
-    {
-      title: "Soil Health and Conservation Techniques",
-      start: new Date(2024, 4, 8),
-      end: new Date(2024, 4, 11)
-    },
-    {
-      title: "Precision Agriculture Technology Expo",
-      start: new Date(2024, 4, 15),
-      end: new Date(2024, 4, 18)
-    },
-    {
-      title: "Irrigation Efficiency Strategies",
-      start: new Date(2024, 4, 22),
-      end: new Date(2024, 4, 25)
-    },
-    {
-      title: "Crop Rotation and Diversity Planning",
-      start: new Date(2024, 5, 1),
-      end: new Date(2024, 5, 4)
-    },
-    {
-      title: "Harvest Management and Post-Harvest Care",
-      start: new Date(2024, 5, 8),
-      end: new Date(2024, 5, 11)
-    }
-  ];
-
   useEffect(() => {
     const fetchCalendarEvents = async () => {
       const response = await getCalendarEvents();
-      const responseWithDate = response.map((event) => {
+      // console.log(response);
+
+      const responseWithDate = response?.map((event) => {
         const endDate = event.end ? new Date(event.end) : new Date();
         return {
           title: event.title,

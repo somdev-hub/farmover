@@ -55,7 +55,7 @@ const Learning = () => {
             List of curated educational videos for you
           </p>
 
-          <div className="mt-3 flex justify-start items-center flex-col sm:flex-row sm:flex-wrap">
+          <div className="mt-3 flex justify-start items-start flex-col sm:flex-row sm:flex-wrap">
             {videos?.map((video, index) => {
               return (
                 <div
@@ -91,7 +91,9 @@ const Learning = () => {
                       </h4>
                     </div>
                     <p className="text-[14px] sm:text-[12px]">
-                      {video.description}
+                      {video.description.length > 100
+                        ? video.description.substring(0, 100) + "..."
+                        : video.description}
                     </p>
                   </div>
                 </div>

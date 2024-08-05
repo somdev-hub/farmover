@@ -42,6 +42,10 @@ const Login = () => {
           navigate("/service/home");
           break;
 
+        case "CONTENT_CREATOR":
+          navigate("/content-creator/home");
+          break;
+
         default:
           navigate("/login");
           break;

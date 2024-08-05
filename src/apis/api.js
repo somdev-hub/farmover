@@ -1,9 +1,48 @@
 import axios from "axios";
 
 const ADDRESS = "http://localhost:9090";
-const NODE_ADDRESS = "http://localhost:5000";
 
 const email = localStorage.getItem("email");
+
+const apiInstance = axios.create({
+  baseURL: ADDRESS,
+  headers: {
+    "Content-Type": "application/json"
+  }
+});
+
+const formDataInstance = axios.create({
+  baseURL: ADDRESS,
+  headers: {
+    "Content-Type": "multipart/form-data"
+  }
+});
+
+apiInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+formDataInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export const signup = async (data) => {
   try {
@@ -36,12 +75,10 @@ export const login = async (data) => {
 export const postProductionData = async (data) => {
   try {
     console.log(email);
-    const response = await axios.post(`${ADDRESS}/production/${email}`, data, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.post(
+      `${ADDRESS}/production/${email}`,
+      data
+    );
     return response;
   } catch (error) {
     console.log(error);
@@ -51,12 +88,9 @@ export const postProductionData = async (data) => {
 export const getProductionData = async () => {
   try {
     // const email = localStorage.getItem("email");
-    const response = await axios.get(`${ADDRESS}/production/?email=${email}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(
+      `${ADDRESS}/production/?email=${email}`
+    );
     return response.data;
   } catch (error) {
     console.log(error);
@@ -65,15 +99,9 @@ export const getProductionData = async () => {
 
 export const updateProductionData = async (data) => {
   try {
-    const response = await axios.put(
+    const response = await apiInstance.put(
       `${ADDRESS}/production/${data.token}`,
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      data
     );
     return response;
   } catch (error) {
@@ -84,14 +112,8 @@ export const updateProductionData = async (data) => {
 export const getEachProductionData = async () => {
   try {
     // const email = localStorage.getItem("email");
-    const response = await axios.get(
-      `${ADDRESS}/production/crops?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/production/crops?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -101,14 +123,8 @@ export const getEachProductionData = async () => {
 
 export const getQueuedProductionViaToken = async (token) => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/production/${token}?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/production/${token}?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -118,16 +134,10 @@ export const getQueuedProductionViaToken = async (token) => {
 
 export const getCalendarEvents = async () => {
   try {
-    const response = await axios.get(
+    const response = await apiInstance.get(
       `${ADDRESS}/calendar/get-events?email=${email}&role=${localStorage.getItem(
         "role"
-      )}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      )}`
     );
     return response.data;
   } catch (error) {
@@ -147,15 +157,9 @@ export const postWarehouseData = async (data) => {
   formData.append("warehouseImage", data.warehouseImage);
 
   try {
-    const response = await axios.post(
+    const response = await formDataInstance.post(
       `${ADDRESS}/warehouse/addWarehouse?email=${email}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      formData
     );
     console.log(response);
     return response;
@@ -166,15 +170,9 @@ export const postWarehouseData = async (data) => {
 
 export const addStorageArea = async (data) => {
   try {
-    const response = await axios.post(
+    const response = await apiInstance.post(
       `${ADDRESS}/storage/addStorage?email=${email}`,
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      data
     );
     // console.log(response);
     return response;
@@ -185,12 +183,9 @@ export const addStorageArea = async (data) => {
 
 export const getStorageAreas = async () => {
   try {
-    const response = await axios.get(`${ADDRESS}/storage/?email=${email}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(
+      `${ADDRESS}/storage/?email=${email}`
+    );
     return response.data;
   } catch (error) {
     console.log(error);
@@ -199,12 +194,9 @@ export const getStorageAreas = async () => {
 
 export const getStorageCards = async () => {
   try {
-    const response = await axios.get(`${ADDRESS}/storage/card?email=${email}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(
+      `${ADDRESS}/storage/card?email=${email}`
+    );
     return response.data;
   } catch (error) {
     console.log(error);
@@ -213,12 +205,7 @@ export const getStorageCards = async () => {
 
 export const getWarehouses = async () => {
   try {
-    const response = await axios.get(`${ADDRESS}/warehouse/all`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(`${ADDRESS}/warehouse/all`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -227,12 +214,7 @@ export const getWarehouses = async () => {
 
 export const getSpecificWarehouse = async (id) => {
   try {
-    const response = await axios.get(`${ADDRESS}/warehouse/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(`${ADDRESS}/warehouse/${id}`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -241,12 +223,9 @@ export const getSpecificWarehouse = async (id) => {
 
 export const getWarehouseByOwner = async () => {
   try {
-    const response = await axios.get(`${ADDRESS}/warehouse/?email=${email}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(
+      `${ADDRESS}/warehouse/?email=${email}`
+    );
     return response.data;
   } catch (error) {
     console.log(error);
@@ -255,15 +234,9 @@ export const getWarehouseByOwner = async () => {
 
 export const addWarehouseUsage = async (data) => {
   try {
-    const response = await axios.post(
+    const response = await apiInstance.post(
       `${ADDRESS}/production/add-warehouse?email=${email}`,
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      data
     );
     return response;
   } catch (error) {
@@ -273,14 +246,30 @@ export const addWarehouseUsage = async (data) => {
 
 export const getBookings = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/warehouse/bookings?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/warehouse/bookings?email=${email}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getMonthStorageUsage = async () => {
+  try {
+    const response = await apiInstance.get(
+      `${ADDRESS}/warehouse/recent?email=${email}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getMonthlySalesOverview = async () => {
+  try {
+    const response = await apiInstance.get(
+      `${ADDRESS}/warehouse/monthly-sales?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -302,18 +291,11 @@ export const addService = async (data) => {
   formData.append("serviceImage", data.serviceImage);
   formData.append("email", email);
 
-  // for (let [key, value] of formData.entries()) {
-  //   console.log(`${key}: ${value}`);
-  // }
-
   try {
-    const response = await axios.post(`${ADDRESS}/services/`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
-    // console.log(response.data);
+    const response = await formDataInstance.post(
+      `${ADDRESS}/services/`,
+      formData
+    );
     return response;
   } catch (error) {
     console.log(error);
@@ -322,14 +304,8 @@ export const addService = async (data) => {
 
 export const getDashboardServices = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/services/dashboard?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/services/dashboard?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -339,12 +315,9 @@ export const getDashboardServices = async () => {
 
 export const getServicesByOwner = async () => {
   try {
-    const response = await axios.get(`${ADDRESS}/services/?email=${email}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(
+      `${ADDRESS}/services/?email=${email}`
+    );
     return response.data;
   } catch (error) {
     console.log(error);
@@ -353,12 +326,7 @@ export const getServicesByOwner = async () => {
 
 export const getSpecificService = async (id) => {
   try {
-    const response = await axios.get(`${ADDRESS}/services/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(`${ADDRESS}/services/${id}`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -366,12 +334,7 @@ export const getSpecificService = async (id) => {
 };
 export const getAvailableServices = async () => {
   try {
-    const response = await axios.get(`${ADDRESS}/services/available`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(`${ADDRESS}/services/available`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -384,19 +347,13 @@ export const purchaseService = async (
   production_token
 ) => {
   try {
-    const response = await axios.post(
+    const response = await apiInstance.post(
       `${ADDRESS}/production/add-service`,
       {
         productionToken: production_token,
         serviceId: service_id,
         email: email,
         duration: duration
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
       }
     );
     return response;
@@ -407,14 +364,8 @@ export const purchaseService = async (
 
 export const getContractDetails = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/services/contract-details/?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/services/contract-details/?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -424,14 +375,8 @@ export const getContractDetails = async () => {
 
 export const getExpenseChartData = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/chart/expenses?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/chart/expenses?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -441,14 +386,8 @@ export const getExpenseChartData = async () => {
 
 export const getRevenueChartData = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/chart/revenue?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/chart/revenue?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -458,14 +397,8 @@ export const getRevenueChartData = async () => {
 
 export const getProductionChartData = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/chart/production?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/chart/production?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -484,15 +417,9 @@ export const addCompany = async (data) => {
   formData.append("companyImage", data.companyImage);
 
   try {
-    const response = await axios.post(
+    const response = await formDataInstance.post(
       `${ADDRESS}/company/?email=${email}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      formData
     );
     return response;
   } catch (error) {
@@ -502,12 +429,7 @@ export const addCompany = async (data) => {
 
 export const getCompanyWarehouseCardsViaItems = async () => {
   try {
-    const response = await axios.get(`${ADDRESS}/company/each-item`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(`${ADDRESS}/company/each-item`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -516,14 +438,8 @@ export const getCompanyWarehouseCardsViaItems = async () => {
 
 export const getWarehouseMarket = async (id) => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/company/warehouse-market/${id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/company/warehouse-market/${id}`
     );
     return response.data;
   } catch (error) {
@@ -533,14 +449,8 @@ export const getWarehouseMarket = async (id) => {
 
 export const getWarehouseFarmers = async (id) => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/company/warehouse/farmers/${id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/company/warehouse/farmers/${id}`
     );
     return response.data;
   } catch (error) {
@@ -550,16 +460,10 @@ export const getWarehouseFarmers = async (id) => {
 
 export const purchaseCrops = async (productionTokens) => {
   try {
-    const response = await axios.post(
+    const response = await apiInstance.post(
       `${ADDRESS}/company/purchase?email=${email}`,
       {
         ...productionTokens
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
       }
     );
     return response;
@@ -570,12 +474,9 @@ export const purchaseCrops = async (productionTokens) => {
 
 export const getWarehousesByAvailableCrops = async () => {
   try {
-    const response = await axios.get(`${ADDRESS}/company/warehouses/crops`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(
+      `${ADDRESS}/company/warehouses/crops`
+    );
     return response.data;
   } catch (error) {
     console.log(error);
@@ -584,14 +485,8 @@ export const getWarehousesByAvailableCrops = async () => {
 
 export const getCompanyPurchases = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/company/purchases?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/company/purchases?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -601,14 +496,8 @@ export const getCompanyPurchases = async () => {
 
 export const getCompanyCropCards = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/company/crop-cards?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/company/crop-cards?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -618,14 +507,8 @@ export const getCompanyCropCards = async () => {
 
 export const getCropsSalesReport = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/production/sales-report?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/production/sales-report?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -635,14 +518,8 @@ export const getCropsSalesReport = async () => {
 
 export const getOrderOverview = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/production/overview?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/production/overview?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -652,14 +529,8 @@ export const getOrderOverview = async () => {
 
 export const getWarehouseSalesOverview = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/warehouse/overview?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/warehouse/overview?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -669,14 +540,8 @@ export const getWarehouseSalesOverview = async () => {
 
 export const getWarehouseUsageChartData = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/chart/warehouse-usage?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/chart/warehouse-usage?email=${email}`
     );
     console.log(response.data);
     return response.data;
@@ -687,14 +552,8 @@ export const getWarehouseUsageChartData = async () => {
 
 export const getWarehouseRevenueFromBookingsChartData = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/chart/warehouse-revenue/bookings?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/chart/warehouse-revenue/bookings?email=${email}`
     );
     console.log(response.data);
     return response.data;
@@ -705,14 +564,8 @@ export const getWarehouseRevenueFromBookingsChartData = async () => {
 
 export const getWarehouseRevenueFromSalesChartData = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/chart/warehouse-revenue/sales?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/chart/warehouse-revenue/sales?email=${email}`
     );
     console.log(response.data);
     return response.data;
@@ -731,15 +584,9 @@ export const addVideo = async (data) => {
   formData.append("thumbnail", data.thumbnail);
 
   try {
-    const response = await axios.post(
+    const response = await formDataInstance.post(
       `${ADDRESS}/videos/?ownerEmail=${email}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      formData
     );
     return response;
   } catch (error) {
@@ -756,16 +603,19 @@ export const addArticle = async (data) => {
   formData.append("content", JSON.stringify(data.content));
 
   try {
-    const response = await axios.post(
+    const response = await formDataInstance.post(
       `${ADDRESS}/articles/?ownerEmail=${email}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      formData
     );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteArticle = async (id) => {
+  try {
+    const response = await apiInstance.delete(`${ADDRESS}/articles/${id}`);
     return response;
   } catch (error) {
     console.log(error);
@@ -774,14 +624,8 @@ export const addArticle = async (data) => {
 
 export const getVideosByUser = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/videos/get-by-email?ownerEmail=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/videos/get-by-email?ownerEmail=${email}`
     );
     return response.data;
   } catch (error) {
@@ -791,14 +635,8 @@ export const getVideosByUser = async () => {
 
 export const getArticlesByUser = async () => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/articles/get-by-email?ownerEmail=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/articles/get-by-email?ownerEmail=${email}`
     );
     return response.data;
   } catch (error) {
@@ -808,12 +646,7 @@ export const getArticlesByUser = async () => {
 
 export const getVideoById = async (id) => {
   try {
-    const response = await axios.get(`${ADDRESS}/videos/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    });
+    const response = await apiInstance.get(`${ADDRESS}/videos/${id}`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -822,14 +655,8 @@ export const getVideoById = async (id) => {
 
 export const getVideoComments = async (id, page, size) => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/videos/comments/${id}?page=${page}&size=${size}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/videos/comments/${id}?page=${page}&size=${size}`
     );
     return response.data;
   } catch (error) {
@@ -839,14 +666,8 @@ export const getVideoComments = async (id, page, size) => {
 
 export const getArticleById = async (id) => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/articles/${id}?email=${email}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/articles/${id}?email=${email}`
     );
     return response.data;
   } catch (error) {
@@ -856,14 +677,8 @@ export const getArticleById = async (id) => {
 
 export const getVideosForUsers = async (page, size) => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/videos/?page=${page}&size=${size}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/videos/?page=${page}&size=${size}`
     );
     return response.data;
   } catch (error) {
@@ -873,14 +688,8 @@ export const getVideosForUsers = async (page, size) => {
 
 export const getArticlesForUsers = async (page, size) => {
   try {
-    const response = await axios.get(
-      `${ADDRESS}/articles/?page=${page}&size=${size}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+    const response = await apiInstance.get(
+      `${ADDRESS}/articles/?page=${page}&size=${size}`
     );
     return response.data;
   } catch (error) {
@@ -890,15 +699,9 @@ export const getArticlesForUsers = async (page, size) => {
 
 export const addViewToVideo = async (id) => {
   try {
-    const response = await axios.put(
+    const response = await apiInstance.put(
       `${ADDRESS}/videos/view/${id}?email=${email}`,
-      {},
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      {}
     );
     return response;
   } catch (error) {
@@ -908,15 +711,9 @@ export const addViewToVideo = async (id) => {
 
 export const toggleUpVoteVideo = async (id) => {
   try {
-    const response = await axios.put(
+    const response = await apiInstance.put(
       `${ADDRESS}/videos/upvote/${id}?email=${email}`,
-      {},
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      {}
     );
     return response;
   } catch (error) {
@@ -926,15 +723,9 @@ export const toggleUpVoteVideo = async (id) => {
 
 export const toggleDownVoteVideo = async (id) => {
   try {
-    const response = await axios.put(
+    const response = await apiInstance.put(
       `${ADDRESS}/videos/downvote/${id}?email=${email}`,
-      {},
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      {}
     );
     return response;
   } catch (error) {
@@ -944,19 +735,10 @@ export const toggleDownVoteVideo = async (id) => {
 
 export const addCommentToVideo = async (id, comment) => {
   try {
-    const response = await axios.post(
-      `${ADDRESS}/videos/comment/${id}/`,
-      {
-        comment: comment,
-        email: email
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
-    );
+    const response = await apiInstance.post(`${ADDRESS}/videos/comment/${id}`, {
+      comment: comment,
+      email: email
+    });
     return response;
   } catch (error) {
     console.log(error);
@@ -965,15 +747,9 @@ export const addCommentToVideo = async (id, comment) => {
 
 export const addViewToArticle = async (id) => {
   try {
-    const response = await axios.put(
+    const response = await apiInstance.put(
       `${ADDRESS}/articles/view/${id}?email=${email}`,
-      {},
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      {}
     );
     return response;
   } catch (error) {
@@ -983,15 +759,9 @@ export const addViewToArticle = async (id) => {
 
 export const toggleUpVoteArticle = async (id) => {
   try {
-    const response = await axios.put(
+    const response = await apiInstance.put(
       `${ADDRESS}/articles/upvote/${id}?email=${email}`,
-      {},
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      {}
     );
     return response;
   } catch (error) {
@@ -1001,15 +771,9 @@ export const toggleUpVoteArticle = async (id) => {
 
 export const toggleDownVoteArticle = async (id) => {
   try {
-    const response = await axios.put(
+    const response = await apiInstance.put(
       `${ADDRESS}/articles/downvote/${id}?email=${email}`,
-      {},
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      }
+      {}
     );
     return response;
   } catch (error) {
@@ -1019,20 +783,69 @@ export const toggleDownVoteArticle = async (id) => {
 
 export const addCommentToArticle = async (id, comment) => {
   try {
-    const response = await axios.post(
+    const response = await apiInstance.post(
       `${ADDRESS}/articles/comment/${id}`,
       {
         comment: comment,
         email: email
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
       }
     );
     return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getContentCreatorDashboardCards = async () => {
+  try {
+    const response = await apiInstance.get(
+      `${ADDRESS}/content-creator/cards?email=${email}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getViewsByRolesChartData = async () => {
+  try {
+    const response = await apiInstance.get(
+      `${ADDRESS}/chart/content-creator/views-by-roles?email=${email}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getViewsByMonthChartData = async () => {
+  try {
+    const response = await apiInstance.get(
+      `${ADDRESS}/chart/content-creator/views-by-month?email=${email}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getEngagementsByRolesChartData = async () => {
+  try {
+    const response = await apiInstance.get(
+      `${ADDRESS}/chart/content-creator/engagements-by-roles?email=${email}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getRecentComments = async () => {
+  try {
+    const response = await apiInstance.get(
+      `${ADDRESS}/content-creator/recent?email=${email}&page=0&size=5`
+    );
+    return response.data;
   } catch (error) {
     console.log(error);
   }

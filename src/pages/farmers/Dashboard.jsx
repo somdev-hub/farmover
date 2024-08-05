@@ -84,7 +84,7 @@ const Dashboard = () => {
       }
     },
     xAxis: {
-      categories: [revenue && Object.keys(revenue)],
+      categories: revenue && Object.keys(revenue),
       labels: {
         enabled: false
       }
@@ -92,7 +92,7 @@ const Dashboard = () => {
     series: [
       {
         name: "Revenue",
-        data: [revenue && Object.values(revenue)] // replace this with your actual data
+        data: revenue ? Object.values(revenue) : []
       }
     ]
   };
@@ -117,7 +117,7 @@ const Dashboard = () => {
       }
     },
     xAxis: {
-      categories: [expenses && Object.keys(expenses)],
+      categories: expenses ? Object.keys(expenses) : [],
       labels: {
         enabled: false
       }
@@ -125,43 +125,12 @@ const Dashboard = () => {
     series: [
       {
         name: "Expenditure",
-        data: [expenses && Object.values(expenses)] // replace this with your actual data
+        data: expenses ? Object.values(expenses) : [] // replace this with your actual data
       }
     ]
   };
 
-  const orders = [
-    {
-      company: "Company 1",
-      purchase: "Rice",
-      warehouse: "Warehouse 1",
-      revenue: "1000"
-    },
-    {
-      company: "Company 2",
-      purchase: "Rice",
-      warehouse: "Warehouse 1",
-      revenue: "1000"
-    },
-    {
-      company: "Company 3",
-      purchase: "Rice",
-      warehouse: "Warehouse 1",
-      revenue: "1000"
-    },
-    {
-      company: "Company 4",
-      purchase: "Rice",
-      warehouse: "Warehouse 1",
-      revenue: "1000"
-    },
-    {
-      company: "Company 5",
-      purchase: "Rice",
-      warehouse: "Warehouse 1",
-      revenue: "1000"
-    }
-  ];
+  console.log(expenses);
 
   useEffect(() => {
     const fetchProductionCard = async () => {
@@ -261,44 +230,12 @@ const Dashboard = () => {
               </div>
             </Paper>
           ))}
-          {/* <div className="px-6 w-[17rem] py-4 rounded-[1rem] bg-white shadow-md flex flex-col ">
-          <div className="flex justify-between ">
-            <img
-              src="https://media.istockphoto.com/id/522691403/photo/close-up-peddy-rice-in-a-field.jpg?s=612x612&w=0&k=20&c=OV5Srt6zPWG8J6QpfQk6pTV242GGlVY5l-VoGdU9uyc="
-              alt=""
-              className="w-[4rem] h-[4rem] rounded-[1rem] object-cover inline-block shadow-md"
-            />
-            <div className="">
-              <p className="font-bold text-[1.7rem]">100</p>
-              <p className="font-[500] text-[20px]">Quintals</p>
-            </div>
-          </div>
-          <div className="border-t-2 border-grey mt-8 pt-4 border-solid">
-            <p className="text-[18px] text-grey">Total paddy production</p>
-          </div>
-        </div>
-        <div className="px-6 w-[17rem] py-4 rounded-[1rem] bg-white shadow-md flex flex-col ">
-          <div className="flex justify-between ">
-            <img
-              src="https://media.istockphoto.com/id/522691403/photo/close-up-peddy-rice-in-a-field.jpg?s=612x612&w=0&k=20&c=OV5Srt6zPWG8J6QpfQk6pTV242GGlVY5l-VoGdU9uyc="
-              alt=""
-              className="w-[4rem] h-[4rem] rounded-[1rem] object-cover inline-block shadow-md"
-            />
-            <div className="">
-              <p className="font-bold text-[1.7rem]">100</p>
-              <p className="font-[500] text-[20px]">Quintals</p>
-            </div>
-          </div>
-          <div className="border-t-2 border-grey mt-8 pt-4 border-solid">
-            <p className="text-[18px] text-grey">Total paddy production</p>
-          </div>
-        </div> */}
         </div>
       </div>
       <h3 className="font-[500] text-[1.125rem] mt-4">Production analytics</h3>
 
-      <div className="flex flex-col sm:flex-row gap-4 mt-[9rem]">
-        <div className="">
+      <div className="flex flex-col sm:flex-row gap-4 mt-[9rem] w-full">
+        <div className=" w-full">
           <ChartCard
             options={totalProductionOptions}
             title="Total production"
@@ -309,7 +246,7 @@ const Dashboard = () => {
             } kilograms of total productions`}
           />
         </div>
-        <div className="sm:mt-0 mt-[8rem]">
+        <div className="sm:mt-0 mt-[8rem] w-full">
           <ChartCard
             options={totalRevenueOptions}
             title="Total revenue"
@@ -317,7 +254,7 @@ const Dashboard = () => {
             desc="5% increase in total revenue"
           />
         </div>
-        <div className="sm:mt-0 mt-[8rem]">
+        <div className="sm:mt-0 mt-[8rem] w-full">
           <ChartCard
             options={totalExpenseOptions}
             title="Total expenditure"

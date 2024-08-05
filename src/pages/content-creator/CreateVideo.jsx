@@ -2,6 +2,7 @@ import { Button, Paper } from "@mui/material";
 import { useRef, useState } from "react";
 import MainInput from "../../components/MainInput";
 import { addVideo } from "../../apis/api";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const CreateVideo = () => {
   const [video, setVideo] = useState({
@@ -12,6 +13,7 @@ const CreateVideo = () => {
     description: "",
     thumbnail: null
   });
+  const [loading, setLoading] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -32,17 +34,14 @@ const CreateVideo = () => {
 
   const handleSubmit = async () => {
     console.log(video);
+    setLoading(true);
     const response = await addVideo(video);
     if (response.status === 201) {
-      alert("Video uploaded successfully");
-      setVideo({
-        title: "",
-        video: null,
-        tags: [],
-        longDescription: "",
-        description: "",
-        thumbnail: null
-      });
+      setLoading(false);
+      window.location.href = "/content-creator/home";
+    } else {
+      setLoading(false);
+      alert("Error uploading video");
     }
   };
   return (
@@ -156,7 +155,7 @@ const CreateVideo = () => {
 
         <div className="flex mt-4 justify-end">
           <Button variant="contained" onClick={handleSubmit}>
-            Upload
+            {loading ? <CircularProgress /> : "Upload"}
           </Button>
         </div>
       </div>

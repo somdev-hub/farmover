@@ -130,7 +130,7 @@ const Dashboard = () => {
     fetchCropCards();
   }, []);
   return (
-    <div className="mt-6">
+    <div className="mt-6 w-[98%]">
       <h3 className=" font-[600] text-[1.25rem]">Your Purchases</h3>
       <div className="flex gap-4 overflow-x-scroll p-2 mt-4">
         <Paper

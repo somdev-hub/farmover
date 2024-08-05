@@ -2,8 +2,8 @@ import { Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import { MdDelete, MdOutlineUnpublished, MdUpdate } from "react-icons/md";
 import { useLocation } from "react-router-dom";
-import { getArticleById } from "../../apis/api";
-import DOMPurify from "dompurify";
+import { deleteArticle, getArticleById } from "../../apis/api";
+
 import parse from "html-react-parser";
 import axios from "axios";
 
@@ -29,11 +29,7 @@ const ArticleView = () => {
     };
     fetchArticle();
   }, [id]);
-  // let content = article?.content || "";
-  // if (content.startsWith('"') && content.endsWith('"')) {
-  //   content = content.slice(1, -1);
-  // }
-  // const sanitizedContent = DOMPurify.sanitize(content);
+
   return (
     <div className="mt-8 sm:w-[98%]">
       <div className="w-full flex flex-col sm:flex-row gap-4">
@@ -101,6 +97,12 @@ const ArticleView = () => {
               Update article
             </Paper>
             <Paper
+              onClick={async () => {
+                const response = await deleteArticle(id);
+                if (response.status === 200) {
+                  window.location.href = "/content-creator/uploads";
+                }
+              }}
               sx={{
                 p: 2,
                 borderRadius: "1rem",
