@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import MainInput from "../../components/MainInput";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import {
   getProductionData,
   getQueuedProductionViaToken,
+  getUsedServicesInProduction,
+  getUsedWarehousesInProduction,
   updateProductionData
 } from "../../apis/api";
 import Paper from "@mui/material/Paper";
@@ -26,46 +22,12 @@ import MenuItem from "@mui/material/MenuItem";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { crops } from "../../assets/crops";
+import DataTable from "../../components/DataTable";
 
 const ProductionHistory = () => {
   const [productionQueue, setProductionQueue] = useState([]);
-  const productio_history = [
-    {
-      crop: "Rice",
-      token: "123456",
-      production_date: "12/12/2021",
-      estimated_quantity: "1000",
-      status: "Harvested"
-    },
-    {
-      crop: "Maize",
-      token: "123457",
-      production_date: "12/12/2021",
-      estimated_quantity: "1000",
-      status: "Harvested"
-    },
-    {
-      crop: "Beans",
-      token: "123458",
-      production_date: "12/12/2021",
-      estimated_quantity: "1000",
-      status: "Stored"
-    },
-    {
-      crop: "Rice",
-      token: "123459",
-      production_date: "12/12/2021",
-      estimated_quantity: "1000",
-      status: "Harvested"
-    },
-    {
-      crop: "Rice",
-      token: "123460",
-      production_date: "12/12/2021",
-      estimated_quantity: "1000",
-      status: "Harvested"
-    }
-  ];
+  const [usedServices, setUsedServices] = useState([]);
+  const [usedWarehouses, setUsedWarehouses] = useState([]);
 
   const [snackbarOpen, setSnackbarOpen] = useState({
     open: false,
@@ -104,406 +66,246 @@ const ProductionHistory = () => {
     }
   };
 
+  const serviceUsageColumns = [
+    "SERIAL NO",
+    "SERVICE",
+    "CROP",
+    "TOKEN",
+    "COST",
+    "START DATE",
+    "DURATION",
+    "STATUS"
+  ];
+
+  const serviceUsageColumnKeys = [
+    "serviceName",
+    "crop",
+    "token",
+    "cost",
+    "startDate",
+    "duration",
+    "status"
+  ];
+
+  const productionQueueColumns = [
+    "SERIAL NO",
+    "CROP",
+    "TOKEN",
+    "PRODUCTION DATE",
+    "ESTIMATED QUANTITY",
+    "STATUS"
+  ];
+
+  const productionQueueColumnKeys = [
+    "crop",
+    "token",
+    "date",
+    "quantity",
+    "status"
+  ];
+
+  const warehouseUsageColumns = [
+    "SERIAL NO",
+    "WAREHOUSE NAME",
+    "CROP",
+    "TOKEN",
+    "DATE",
+    "QUANTITY",
+    "COST",
+    "DURATION"
+  ];
+
+  const warehouseUsageColumnKeys = [
+    "warehouseName",
+    "crop",
+    "productionToken",
+    "date",
+    "quantity+unit",
+    "cost",
+    "duration"
+  ];
+
   useEffect(() => {
     const fetchQueuedData = async () => {
       const response = await getProductionData();
       setProductionQueue(response);
     };
+    const fetchUsedServices = async () => {
+      const response = await getUsedServicesInProduction();
+      setUsedServices(response);
+    };
+    const fetchUsedWarehouses = async () => {
+      const response = await getUsedWarehousesInProduction();
+      setUsedWarehouses(response);
+    };
+
+    fetchUsedWarehouses();
+    fetchUsedServices();
     fetchQueuedData();
   }, []);
   return (
-    <div className="mt-8">
-      <div className="bg-white rounded-[1rem] shadow-md px-4 py-6">
-        <div className="border-b-[1px] border-solid border-grey pb-3">
-          <h3 className="font-[600] text-[1.125rem]">
-            Search your productions
-          </h3>
-          <p className="font-[500] text-brown">
-            Enter your token and filter out your productions
-          </p>
-        </div>
-        <div className="flex justify-between my-4 w-full">
-          <div className="flex-1">
-            <div className="w-[80%]">
-              <MainInput
-                heading="Enter your token"
-                placeholder="Search by token"
-                className="mt-4"
-                type="text"
-                font="14px"
-              />
-            </div>
+    <div className="mt-8 w-[98%]">
+      <Paper
+        sx={{
+          p: 2,
+          borderRadius: "1rem"
+        }}
+      >
+        <div className="">
+          <div className="border-b-[1px] border-solid border-grey pb-3">
+            <h3 className="font-[600] text-[1.125rem]">
+              Your production queue
+            </h3>
+            <p className="font-[500] text-brown">
+              Your current production queue contains status of ongoing
+              productions
+            </p>
           </div>
-          <div className="flex-1 flex items-center justify-end">
-            <div className="shadow-md bg-white px-4 py-2  flex items-center font-[500] gap-1 rounded-lg">
-              <MdOutlineFilterAlt className="text-[20px]" /> Filter
+          <div className="flex justify-between my-4 w-full">
+            <div className="flex-1">
+              <div className="w-[80%]">
+                <MainInput
+                  heading="Enter your token"
+                  placeholder="Search by token"
+                  className="mt-4"
+                  type="text"
+                  font="14px"
+                  name="productionQueueToken"
+                  value={productionQueueToken}
+                  onChange={(e) => setProductionQueueToken(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter")
+                      searchInProductionQueue(e.target.value);
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        </div>
-        <TableContainer className="mt-4">
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  SERIAL NO
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  CROP
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  TOKEN
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  PRODUCTION DATE
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  ESTIMATED QUANTITY
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  STATUS
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {productio_history.map((history, index) => {
-                return (
-                  <TableRow key={index}>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {index + 1}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {history.crop}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {history.token}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {history.production_date}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {history.estimated_quantity}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {history.status}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-      <div className="bg-white rounded-[1rem] shadow-md px-4 py-6 mt-6">
-        <div className="border-b-[1px] border-solid border-grey pb-3">
-          <h3 className="font-[600] text-[1.125rem]">Your production queue</h3>
-          <p className="font-[500] text-brown">
-            Your current production queue contains status of ongoing productions
-          </p>
-        </div>
-        <div className="flex justify-between my-4 w-full">
-          <div className="flex-1">
-            <div className="w-[80%]">
-              <MainInput
-                heading="Enter your token"
-                placeholder="Search by token"
-                className="mt-4"
-                type="text"
-                font="14px"
-                name="productionQueueToken"
-                value={productionQueueToken}
-                onChange={(e) => setProductionQueueToken(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter")
-                    searchInProductionQueue(e.target.value);
-                }}
-              />
-            </div>
-          </div>
 
-          <div className="flex-1 flex items-center justify-end relative">
-            {menuOpen && (
-              <Paper
-                sx={{
-                  position: "absolute",
-                  top: "0",
-                  right: "7rem",
-                  zIndex: "1000"
-                }}
+            <div className="flex-1 flex items-center justify-end relative">
+              {menuOpen && (
+                <Paper
+                  sx={{
+                    position: "absolute",
+                    top: "0",
+                    right: "7rem",
+                    zIndex: "1000"
+                  }}
+                >
+                  <MenuList>
+                    <MenuItem>Harvested</MenuItem>
+                    <MenuItem>Stored</MenuItem>
+                    <MenuItem>Processing</MenuItem>
+                  </MenuList>
+                </Paper>
+              )}
+              {/* </Dialog> */}
+              <div
+                className="shadow-md bg-white px-4 py-2 cursor-pointer flex items-center font-[500] gap-1 rounded-lg"
+                onClick={() => setMenuOpen(!menuOpen)}
               >
-                <MenuList>
-                  <MenuItem>Harvested</MenuItem>
-                  <MenuItem>Stored</MenuItem>
-                  <MenuItem>Processing</MenuItem>
-                </MenuList>
-              </Paper>
-            )}
-            {/* </Dialog> */}
-            <div
-              className="shadow-md bg-white px-4 py-2 cursor-pointer flex items-center font-[500] gap-1 rounded-lg"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              <MdOutlineFilterAlt className="text-[20px]" /> Filter
+                <MdOutlineFilterAlt className="text-[20px]" /> Filter
+              </div>
             </div>
           </div>
+          <DataTable
+            columns={productionQueueColumns}
+            data={productionQueue}
+            dataKeys={productionQueueColumnKeys}
+            activation={(queue) => {
+              setDialogOpen({
+                data: queue,
+                visible: true
+              });
+              setUpdatedCropData({
+                quantity: queue?.quantity,
+                status: queue?.status,
+                token: queue?.token
+              });
+            }}
+          />
         </div>
-        <TableContainer className="mt-4">
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  SERIAL NO
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  CROP
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  TOKEN
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  PRODUCTION DATE
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  ESTIMATED QUANTITY
-                </TableCell>
-                <TableCell
-                  align="left"
-                  sx={{
-                    fontSize: "14px",
-                    color: "#7D7463",
-                    fontWeight: "600",
-                    paddingRight: "2rem"
-                  }}
-                >
-                  STATUS
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {productionQueue?.map((queue, index) => {
-                return (
-                  <TableRow
-                    key={index}
-                    onClick={() => {
-                      setDialogOpen({
-                        data: queue,
-                        visible: true
-                      });
-                      setUpdatedCropData({
-                        quantity: queue?.quantity,
-                        status: queue?.status,
-                        token: queue?.token
-                      });
-                    }}
-                  >
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {index + 1}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {queue?.crop}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {queue?.token}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {new Date(queue?.date).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {queue?.quantity}
-                    </TableCell>
-                    <TableCell
-                      align="left"
-                      sx={{
-                        fontSize: "14px",
-                        // color: "#7D7463",
-                        fontWeight: "400",
-                        paddingRight: "2rem"
-                      }}
-                    >
-                      {queue?.status}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+      </Paper>
+
+      <Paper
+        sx={{
+          p: 2,
+          borderRadius: "1rem",
+          marginTop: "1.5rem"
+        }}
+      >
+        <div className="">
+          <div className="border-b-[1px] border-solid border-grey pb-3">
+            <h3 className="font-[600] text-[1.125rem]">Warehouses in use</h3>
+            <p className="font-[500] text-brown">
+              Enter your token and filter out your productions
+            </p>
+          </div>
+          <div className="flex justify-between my-4 w-full">
+            <div className="flex-1">
+              <div className="w-[80%]">
+                <MainInput
+                  heading="Enter your token"
+                  placeholder="Search by token"
+                  className="mt-4"
+                  type="text"
+                  font="14px"
+                />
+              </div>
+            </div>
+            <div className="flex-1 flex items-center justify-end">
+              <div className="shadow-md bg-white px-4 py-2  flex items-center font-[500] gap-1 rounded-lg">
+                <MdOutlineFilterAlt className="text-[20px]" /> Filter
+              </div>
+            </div>
+          </div>
+          <DataTable
+            columns={warehouseUsageColumns}
+            data={usedWarehouses}
+            dataKeys={warehouseUsageColumnKeys}
+          />
+        </div>
+      </Paper>
+
+      <Paper
+        sx={{
+          p: 2,
+          borderRadius: "1rem",
+          marginTop: "1.5rem"
+        }}
+      >
+        <div className="bg-white  ">
+          <div className="border-b-[1px] border-solid border-grey pb-3">
+            <h3 className="font-[600] text-[1.125rem]">Your service usage</h3>
+            <p className="font-[500] text-brown">
+              List of services being used in your productions
+            </p>
+          </div>
+          <div className="flex justify-between my-4 w-full">
+            <div className="flex-1">
+              <div className="w-[80%]">
+                <MainInput
+                  heading="Enter your token"
+                  placeholder="Search by token"
+                  className="mt-4"
+                  type="text"
+                  font="14px"
+                />
+              </div>
+            </div>
+            <div className="flex-1 flex items-center justify-end">
+              <div className="shadow-md bg-white px-4 py-2  flex items-center font-[500] gap-1 rounded-lg">
+                <MdOutlineFilterAlt className="text-[20px]" /> Filter
+              </div>
+            </div>
+          </div>
+          <DataTable
+            columns={serviceUsageColumns}
+            data={usedServices}
+            dataKeys={serviceUsageColumnKeys}
+          />
+        </div>
+      </Paper>
+
       <Dialog
         open={dialogOpen.visible}
         onClose={() =>

@@ -12,26 +12,34 @@ import {
 import PropTypes from "prop-types";
 
 const TableCellContent = ({ row, type }) => {
+  if (type.includes("+")) {
+    const [first, second] = type.split("+");
+    return `${row[first]} ${row[second]}`;
+  }
+
   switch (type) {
     case "storageType":
       return storage_areas[row[type]];
     case "price":
     case "commission":
     case "bookedPrice":
+    case "cost":
       return `Rs. ${row[type]}/-`;
     case "crop":
       return crops.find((crop) => crop.value === row[type]).name;
+    case "duration":
+      return `${row[type]} days`;
     default:
       return row[type];
   }
 };
 
-const DataTable = ({ columns, data, dataKeys }) => {
+const DataTable = ({ columns, data, dataKeys, activation }) => {
   const transformedData = useMemo(
     () =>
-      data.map((row, rowIndex) => ({
+      data?.map((row, rowIndex) => ({
         ...row,
-        cells: dataKeys.map((key, cellIndex) => (
+        cells: dataKeys?.map((key, cellIndex) => (
           <TableCell
             align="left"
             sx={{
@@ -52,7 +60,7 @@ const DataTable = ({ columns, data, dataKeys }) => {
       <Table>
         <TableHead>
           <TableRow>
-            {columns.map((column) => (
+            {columns?.map((column) => (
               <TableCell
                 align="left"
                 sx={{
@@ -68,10 +76,15 @@ const DataTable = ({ columns, data, dataKeys }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {transformedData.map((row, index) => (
-            <TableRow key={row.id || index}>
-              {" "}
-              {/* Assuming rows have unique 'id' */}
+          {transformedData?.map((row, index) => (
+            <TableRow
+              key={row.id || index}
+              onClick={() => {
+                if (activation) {
+                  activation(row);
+                }
+              }}
+            >
               <TableCell
                 align="left"
                 sx={{
@@ -93,7 +106,8 @@ const DataTable = ({ columns, data, dataKeys }) => {
 DataTable.propTypes = {
   columns: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
-  dataKeys: PropTypes.array.isRequired
+  dataKeys: PropTypes.array.isRequired,
+  activation: PropTypes.func
 };
 
 export default DataTable;

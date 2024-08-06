@@ -183,13 +183,13 @@ function ServiceLayout() {
       name: "Learning",
       icon: FaBook,
       paths: ["/learning", "/video", "/article"],
-      path: "/farmer/learning"
+      path: "/service/learning"
     },
     {
       name: "Calendar",
       icon: FaRegCalendar,
       paths: ["/calendar"],
-      path: "/farmer/calendar"
+      path: "/service/calendar"
     }
   ];
   return (

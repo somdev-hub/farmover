@@ -19,7 +19,7 @@ import {
 } from "../../apis/api";
 import { FaMinus } from "react-icons/fa6";
 import { crops } from "../../assets/crops";
-import { Paper } from "@mui/material";
+import { Pagination, Paper } from "@mui/material";
 
 const Dashboard = () => {
   const [productionCard, setProductioCard] = useState([]);
@@ -28,6 +28,7 @@ const Dashboard = () => {
   const [productionData, setProductionData] = useState([]);
   const [cropSalesReport, setCropSalesReport] = useState([]);
   const [orderOverview, setOrderOverview] = useState([]);
+  const [overviewPage, setOverviewPage] = useState(0);
 
   const totalProductionOptions = {
     chart: {
@@ -130,8 +131,6 @@ const Dashboard = () => {
     ]
   };
 
-  console.log(expenses);
-
   useEffect(() => {
     const fetchProductionCard = async () => {
       const response = await getEachProductionData();
@@ -151,14 +150,14 @@ const Dashboard = () => {
       setCropSalesReport(response);
     };
     const fetchOrderOverview = async () => {
-      const response = await getOrderOverview();
+      const response = await getOrderOverview(overviewPage);
       setOrderOverview(response);
     };
     fetchProductionCard();
     fetchExpensesAndRevenue();
     fetchCropSalesReport();
     fetchOrderOverview();
-  }, []);
+  }, [overviewPage]);
   return (
     <div className="mt-8 sm:w-[98%]">
       <div className="">
@@ -208,10 +207,13 @@ const Dashboard = () => {
               }}
               key={index}
             >
-              <div className=" flex flex-col min-w-[14rem]" key={index}>
+              <div
+                className=" flex flex-col min-w-[14rem] justify-between"
+                key={index}
+              >
                 <div className="flex justify-between ">
                   <img
-                    src="https://media.istockphoto.com/id/522691403/photo/close-up-peddy-rice-in-a-field.jpg?s=612x612&w=0&k=20&c=OV5Srt6zPWG8J6QpfQk6pTV242GGlVY5l-VoGdU9uyc="
+                    src={crops.find((crop) => crop.value === key?.cropName).img}
                     alt=""
                     className="w-[4rem] h-[4rem] rounded-[1rem] object-cover inline-block shadow-md"
                   />
@@ -222,9 +224,11 @@ const Dashboard = () => {
                     <p className="font-[500] text-[20px]">Quintals</p>
                   </div>
                 </div>
-                <div className="border-t-2 border-grey mt-3 pt-4 border-solid">
-                  <p className="text-[18px] text-grey">
-                    {key?.cropName} production
+                <div className="border-t-2 border-grey mt-3 pt-2 border-solid">
+                  <p className="text-[1.125rem] font-[500] text-grey">
+                    Total{" "}
+                    {crops.find((crop) => crop.value === key?.cropName).name}{" "}
+                    production
                   </p>
                 </div>
               </div>
@@ -373,42 +377,57 @@ const Dashboard = () => {
             </Table>
           </TableContainer>
         </div>
-        <div className="px-6 py-4 rounded-[1rem] bg-white shadow-md sm:w-[35%]">
-          <div className="">
+        <div className="sm:w-[35%]">
+          <Paper
+            sx={{
+              p: 2,
+              borderRadius: "1rem"
+            }}
+          >
             <div className="">
-              <h3 className="text-[24px] font-[600]">Order overview</h3>
-              <p className="text-brown text-[18px] font-[500]">
-                5% up this month
-              </p>
+              <div className="">
+                <h3 className="text-[24px] font-[600]">Order overview</h3>
+                <p className="text-brown text-[18px] font-[500]">
+                  5% up this month
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="mt-7 flex flex-col gap-4">
-            {orderOverview?.map((order, index) => {
-              return (
-                <div key={index} className="flex gap-4 items-center">
-                  {order.type === "CREDIT" ? (
-                    <div className="bg-lightGreen rounded-full p-4 box-border flex items-center justify-center">
-                      <FaPlus className="text-white text-[1.3rem]" />
+            <div className="mt-7 flex flex-col gap-4">
+              {orderOverview?.content?.map((order, index) => {
+                return (
+                  <div key={index} className="flex gap-4 items-center">
+                    {order.type === "CREDIT" ? (
+                      <div className="bg-lightGreen rounded-full p-4 box-border flex items-center justify-center">
+                        <FaPlus className="text-white text-[1.3rem]" />
+                      </div>
+                    ) : (
+                      <div className=" rounded-full bg-red-400 p-4 box-border flex items-center justify-center">
+                        <FaMinus className="text-white text-[1.3rem]" />
+                      </div>
+                    )}
+                    <div className="">
+                      <h3 className="font-[500] text-[18px]">
+                        Rs. {order.total}/- from{" "}
+                        {order?.from && order.from.length > 30
+                          ? order.from.slice(0, 30) + "..."
+                          : order.from}
+                        .
+                      </h3>
+                      <p className="font-[500] text-brown">{order.date}</p>
                     </div>
-                  ) : (
-                    <div className=" rounded-full bg-red-400 p-4 box-border flex items-center justify-center">
-                      <FaMinus className="text-white text-[1.3rem]" />
-                    </div>
-                  )}
-                  <div className="">
-                    <h3 className="font-[500] text-[18px]">
-                      Rs. {order.total}/- from{" "}
-                      {order?.from && order.from.length > 30
-                        ? order.from.slice(0, 30) + "..."
-                        : order.from}
-                      .
-                    </h3>
-                    <p className="font-[500] text-brown">{order.date}</p>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+            <div className="flex justify-center">
+              <Pagination
+                count={orderOverview?.totalPages}
+                page={overviewPage + 1}
+                onChange={(e, value) => setOverviewPage(value - 1)}
+                className="mt-4"
+              />
+            </div>
+          </Paper>
         </div>
       </div>
     </div>

@@ -132,6 +132,28 @@ export const getQueuedProductionViaToken = async (token) => {
   }
 };
 
+export const getUsedServicesInProduction = async () => {
+  try {
+    const response = await apiInstance.get(
+      `${ADDRESS}/production/service-usage?email=${email}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUsedWarehousesInProduction = async () => {
+  try {
+    const response = await apiInstance.get(
+      `${ADDRESS}/production/warehouses?email=${email}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getCalendarEvents = async () => {
   try {
     const response = await apiInstance.get(
@@ -516,10 +538,10 @@ export const getCropsSalesReport = async () => {
   }
 };
 
-export const getOrderOverview = async () => {
+export const getOrderOverview = async (page) => {
   try {
     const response = await apiInstance.get(
-      `${ADDRESS}/production/overview?email=${email}`
+      `${ADDRESS}/production/overview?email=${email}&page=${page}&size=5`
     );
     return response.data;
   } catch (error) {

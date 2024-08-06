@@ -7,6 +7,7 @@ import {
   getExpenseChartData,
   getRevenueChartData
 } from "../../apis/api";
+import { Paper } from "@mui/material";
 
 const Dashboard = () => {
   const [dashboardServices, setDashboardServices] = useState([]);
@@ -14,23 +15,6 @@ const Dashboard = () => {
   const [expenses, setExpenses] = useState({});
   const [revenue, setRevenue] = useState({});
 
-  const services = [
-    {
-      name: "Shipment service",
-      status: "Active",
-      img: "https://www.svgrepo.com/show/271361/tractor-farming.svg"
-    },
-    {
-      name: "Tractor service",
-      status: "Active",
-      img: "https://www.svgrepo.com/show/271361/tractor-farming.svg"
-    },
-    {
-      name: "Harvestor service",
-      status: "Active",
-      img: "https://www.svgrepo.com/show/271361/tractor-farming.svg"
-    }
-  ];
   const totalProductionOptions = {
     chart: {
       type: "column",
@@ -91,7 +75,7 @@ const Dashboard = () => {
       }
     },
     xAxis: {
-      categories: [Object.keys(revenue)],
+      categories: revenue && Object.keys(revenue),
       labels: {
         enabled: false
       }
@@ -99,7 +83,7 @@ const Dashboard = () => {
     series: [
       {
         name: "Revenue",
-        data: [Object.values(revenue)] // replace this with your actual data
+        data: revenue && Object.values(revenue)
       }
     ]
   };
@@ -123,7 +107,7 @@ const Dashboard = () => {
       }
     },
     xAxis: {
-      categories: expenses && [Object.keys(expenses)],
+      categories: expenses && Object.keys(expenses),
       labels: {
         enabled: false
       }
@@ -131,7 +115,7 @@ const Dashboard = () => {
     series: [
       {
         name: "expenses",
-        data: expenses && [Object.values(expenses)] // replace this with your actual data
+        data: expenses && Object.values(expenses) // replace this with your actual data
       }
     ]
   };
@@ -155,34 +139,61 @@ const Dashboard = () => {
     <div className="mt-8">
       <div className="flex gap-4">
         <Link to="/service/add-service" className="flex ">
-          <div className="w-[17rem] px-6 py-4 rounded-[1rem] bg-white shadow-md flex flex-col items-center justify-evenly">
-            <div className="bg-darkNavy rounded-full p-4 box-border">
-              <FaPlus className="text-white text-[1.2rem] box-border" />
-            </div>
-            <p className="text-[1.125rem] font-[600] ">Add service</p>
+          <div className="min-w-[15rem]">
+            <Paper
+              sx={{
+                p: 2,
+                borderRadius: "1rem",
+                minWidth: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%"
+              }}
+            >
+              <div className="flex flex-col items-center justify-evenly">
+                <div className="bg-darkNavy rounded-full p-4 box-border">
+                  <FaPlus className="text-white text-[1.2rem] box-border" />
+                </div>
+                <p className="text-[1.125rem] font-[600] ">Add service</p>
+              </div>
+            </Paper>
           </div>
         </Link>
         {dashboardServices?.map((service, index) => (
-          <div
-            className="w-[17rem] px-6 py-4 rounded-[1rem] bg-white shadow-md flex flex-col items-start justify-center"
-            key={index}
-          >
-            <div className="flex justify-between border-b-2 border-grey border-solid pb-6 w-full">
-              <div className="w-16 h-16 rounded-[1rem] bg-white shadow-md flex items-center justify-center">
-                <img
-                  src="https://www.svgrepo.com/show/271361/tractor-farming.svg"
-                  alt=""
-                  className="object-cover w-[80%] h-[80%] rounded-[1rem]"
-                />
+          <div className="min-w-[15rem]" key={index}>
+            <Paper
+              sx={{
+                p: 2,
+                borderRadius: "1rem",
+                minWidth: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%"
+              }}
+            >
+              <div className="flex flex-col items-start justify-center w-full">
+                <div className="flex justify-between border-b-2 border-grey border-solid pb-4 w-full">
+                  <div className="w-16 h-16 rounded-[1rem] bg-white shadow-md flex items-center justify-center">
+                    <img
+                      src="https://www.svgrepo.com/show/271361/tractor-farming.svg"
+                      alt=""
+                      className="object-cover w-[80%] h-[80%] rounded-[1rem]"
+                    />
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <p className="text-[1.25rem] font-[600] ">
+                      {service.status}
+                    </p>
+                    <p className="text-[1.125rem] font-[500]">status</p>
+                  </div>
+                </div>
+                <p className="text-[1.125rem] text-brown font-[500] mt-3 text-left">
+                  {service.serviceName}
+                </p>
               </div>
-              <div className="flex flex-col items-end">
-                <p className="text-[24px] font-[600] ">{service.status}</p>
-                <p className="text-[20px] font-[500]">status</p>
-              </div>
-            </div>
-            <p className="text-[1.125rem] text-brown font-[500] mt-3 text-left">
-              {service.serviceName}
-            </p>
+            </Paper>
           </div>
         ))}
       </div>

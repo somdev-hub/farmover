@@ -1,42 +1,48 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import green_tick from "../../assets/green-tick.svg";
 import MainInput from "../../components/MainInput";
 import { CgPushRight } from "react-icons/cg";
 import { useLocation } from "react-router-dom";
-import { getSpecificService } from "../../apis/api";
-import { Paper } from "@mui/material";
+import { getSpecificService, purchaseService } from "../../apis/api";
+import { Paper, Snackbar } from "@mui/material";
 
 const ServiceView = () => {
   const [serviceDetails, setServiceDetails] = useState({});
   const location = useLocation();
   const serviceId = location.state.id;
-  const details = {
-    name: "Mr. Monoj Harverter machine 1200HP",
-    owner: "Monoj kumar Padhan",
-    mobile: "+91889289281",
-    availability: "Available",
-    about:
-      "Our harvester machine is a hydrolic compresses grain extractor with a load of 2000HP. It runs on diesel and costs Rs. 1500/- per hour. It is suitable for harvesting wheat, rice, and other grains.",
-    features: [
-      "Hydrolic compresses grain extraction",
-      "2000HP load capacity",
-      "Runs on diesel fuel",
-      "Suitable for wheat, rice, and other grains",
-      "Costs Rs. 1500/- per hour",
-      "Available for rent"
-    ],
-    contact: {
-      owner: "Monoj kumar Padhan",
-      phone: "+91889289281",
-      email: "manojpadhan12@gmail.com"
-    },
-    machineInfo: {
-      machineType: "Hydrolic compresses grain extractor",
-      load: "2000HP",
-      fuelType: "Diesel",
-      costPerHour: "Rs. 1500/-"
+  const [snackbarVisible, setSnackbarVisible] = useState({
+    open: false,
+    message: "",
+    severity: "success"
+  });
+  const [serviceData, setServiceData] = useState({
+    productionToken: 0,
+    duration: 0
+  });
+
+  const addServiceToProduction = async () => {
+    const response = await purchaseService(
+      serviceId,
+      serviceData.duration,
+      serviceData.productionToken
+    );
+    if (response.status === 201) {
+      setSnackbarVisible({
+        open: true,
+        message: "Service added to production successfully",
+        severity: "success"
+      });
+    } else {
+      setSnackbarVisible({
+        open: true,
+        message: "Failed to add service to production",
+        severity: "error"
+      });
     }
+
+    // console.log(serviceData);
   };
+
   useEffect(() => {
     const fetchService = async () => {
       const response = await getSpecificService(serviceId);
@@ -183,38 +189,39 @@ const ServiceView = () => {
           <div className="mt-3 flex gap-4">
             <div className="flex-1 flex-col gap-3 flex">
               <MainInput
-                heading="Enter your name"
-                placeholder="John Doe"
+                heading="Enter your production token"
+                placeholder="xx"
+                type="number"
                 font="14px"
+                value={serviceData.productionToken}
+                onChange={(e) =>
+                  setServiceData({
+                    ...serviceData,
+                    productionToken: e.target.value
+                  })
+                }
               />
               <MainInput
-                heading="Enter your address"
-                placeholder="At/po- Sambalpur, Odisha"
+                heading="Enter duration of activity(in days)"
+                placeholder="60"
+                type="number"
                 font="14px"
-              />
-              <MainInput
-                heading="Enter your pincode"
-                placeholder="768200"
-                font="14px"
-              />
-            </div>
-            <div className="flex-1 flex-col gap-3 flex">
-              <MainInput
-                heading="Enter duration of storage(in months)"
-                placeholder="6"
-                font="14px"
-              />
-              <MainInput
-                heading="Enter your token"
-                placeholder="xxxxxxx"
-                font="14px"
+                value={serviceData.duration}
+                onChange={(e) =>
+                  setServiceData({
+                    ...serviceData,
+                    duration: e.target.value
+                  })
+                }
               />
             </div>
             <div className="flex-1 ml-[3rem] ">
               <div className="border-grey border-b-2 border-solid pb-4">
                 <div className="">
                   <span className="font-[600] ">Total cost: </span>
-                  <span className="font-[500] text-grey">Rs. 1200/-</span>
+                  <span className="font-[500] text-grey">
+                    Rs. {serviceData.duration * serviceDetails?.pricePerDay}/-
+                  </span>
                 </div>
                 <div className="mt-3">
                   <span className="font-[600] ">SGST: </span>
@@ -231,7 +238,7 @@ const ServiceView = () => {
               </div>
               <button
                 className="mt-4 text-[14px] rounded-[1rem] bg-darkNavy w-full py-3 text-white flex gap-2 items-center justify-center"
-                //   onClick={handleSubmit}
+                onClick={addServiceToProduction}
               >
                 Continue
                 <CgPushRight className="text-[20px]" />
@@ -240,6 +247,19 @@ const ServiceView = () => {
           </div>
         </div>
       </div>
+      <Snackbar
+        open={snackbarVisible.open}
+        autoHideDuration={6000}
+        onClose={() =>
+          setSnackbarVisible({
+            ...snackbarVisible,
+            open: false
+          })
+        }
+        message={snackbarVisible.message}
+        severity={snackbarVisible.severity}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      />
     </div>
   );
 };
